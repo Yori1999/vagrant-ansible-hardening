@@ -1,0 +1,42 @@
+# VARIABLES
+
+# Amount of available memory; consider increasing if you have enough memory available
+RAM = 4096
+# Number of cores
+CORES = 2
+# Amount of available virtual memory
+VRAM = 128
+# Box name; must be configured
+# This is the name I'm giving my box when I import it into the system, as it is not present in any public catalog
+BOX = "win-10"
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define "windows10" do |machine|
+    machine.vm.box = BOX
+    machine.vm.network "private_network", ip: "172.17.177.21"
+    machine.vm.boot_timeout = 1800 # 30 minutes
+    machine.vm.guest = :windows
+  
+    machine.vm.network :forwarded_port, guest: 22, host: 2222, id: "ssh", auto_correct: true
+
+    machine.vm.provider "virtualbox" do |vb|
+      # Display the VirtualBox GUI when booting the machine
+      vb.gui = true
+      # Customize the amount of memory on the VM
+      vb.memory = RAM
+      # Customize the # CPUs
+      vb.cpus = CORES
+
+      # VM customization via VBoxManage
+      vb.customize ["modifyvm", :id, "--vram", VRAM]
+    end
+
+    # Copy CLARA's files directly via the provisioner to test the machine's compliance
+    machine.vm.provision "file", source:"../../../../files/CLARA", destination:"CLARA" # This places the folder under Documents for the vagrant user
+
+    # Shared folder (host path, guest path)
+    machine.vm.synced_folder "shared", "/host_data", mount_options:  ["umask=077"]
+  end
+
+end

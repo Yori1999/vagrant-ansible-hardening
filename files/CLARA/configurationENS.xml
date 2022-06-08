@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <ConfigurationIDs>
+	<FileVersion>2.0</FileVersion>
+	<AnalysisTemplateId>0</AnalysisTemplateId>
+	<TargetId>0</TargetId>
+	<WorkspaceId>0</WorkspaceId>
+	<Signature>0</Signature>
+  </ConfigurationIDs>
+  <SecurityENS>
+    <ComplianceLevel>Alta</ComplianceLevel>
+	<SecurityUpdates>
+      <AnalyseMissingUpdates>0</AnalyseMissingUpdates>
+      <CabFile>.\wsusscn2.cab</CabFile>
+    </SecurityUpdates>
+  </SecurityENS>
+  <Additional>
+    <ReportFolder>.\informes</ReportFolder>
+    <LogFolder>.\logs</LogFolder>
+  </Additional> 
+</configuration>
+
