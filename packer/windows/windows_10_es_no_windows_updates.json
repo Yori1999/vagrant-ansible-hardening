@@ -1,0 +1,74 @@
+{
+  "builders": [
+    {
+      "boot_wait": "2m",
+      "disk_size": "{{user `disk_size`}}",
+      "floppy_files": [
+        "{{user `autounattend`}}",
+        "./scripts/fixnetwork.ps1",
+        "./scripts/microsoft-updates.bat",
+        "./scripts/openssh.ps1",
+        "./scripts/win-updates.ps1"
+      ],
+      "guest_os_type": "Windows10_64",
+      "headless": "{{user `headless`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "ssh_password": "vagrant",
+      "ssh_timeout": "2h",
+      "ssh_username": "vagrant",
+      "type": "virtualbox-iso",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `memory_size`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `cpus`}}"
+        ]
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "checksum",
+      "checksum_types": ["sha256"]
+    },
+    {
+      "keep_input_artifact": false,
+      "output": "windows_10_es{{.Provider}}.box",
+      "type": "vagrant",
+      "vagrantfile_template": "vagrantfile-windows_10.template"
+    }
+  ],
+  "provisioners": [
+    {
+      "execute_command": "{{.Vars}} cmd /c C:/Windows/Temp/script.bat",
+      "remote_path": "/tmp/script.bat",
+      "scripts": [
+        "./scripts/vm-guest-tools.bat",
+        "./scripts/vagrant-ssh.bat",
+        "./scripts/disable-auto-logon.bat",
+        "./scripts/enable-rdp.bat",
+        "./scripts/compile-dotnet-assemblies.bat",
+        "./scripts/compact.bat"
+      ],
+      "type": "shell"
+    }
+  ],
+  "variables": {
+    "iso_url": "D:\\W10\\es-es_windows_10_consumer_editions_version_21h2_x64_dvd_f093da01.iso",
+    "iso_checksum": "F240F1AE1F5738E50301E7DABEEBB2B4EF11FA0B9DD7DA1475A7ADF27A4BE4A7",
+    "autounattend": "./answer_files/W10_Student-Edition_es-ES_without-windows-updates/Autounattend.xml",
+    "cpus": "2",
+    "disk_size": "61440",
+    "headless": "true",
+    "memory_size": "2048"
+  }
+}
