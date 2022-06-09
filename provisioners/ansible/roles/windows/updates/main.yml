@@ -1,0 +1,25 @@
+- name: Upgrade 3rd party installed packages
+  win_chocolatey:
+    name: all
+    state: latest
+  ignore_errors: yes
+  tags: ['3rdparty','all']
+
+- name: Upgrade windows packages
+  win_updates:
+    category_names: ['UpdateRollups', 'Updates', 'DefinitionUpdates', 'SecurityUpdates', 'CriticalUpdates']
+    reboot: yes
+    reboot_timeout: 1800
+  tags: ['windows','all']
+
+- name: Install all critical and security updates
+  win_updates:
+    category_names:
+    - CriticalUpdates
+    - SecurityUpdates
+    state: installed
+  register: update_result
+
+- name: Reboot host if required
+  win_reboot:
+  when: update_result.reboot_required

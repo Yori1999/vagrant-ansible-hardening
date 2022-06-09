@@ -1,0 +1,2 @@
+This folder contains all necessary files to get running a hardened Windows 10 machine
+The base Windows 10 machine gets provisioned via ansible with CIS-compliant playbooks that improve the security of said machine

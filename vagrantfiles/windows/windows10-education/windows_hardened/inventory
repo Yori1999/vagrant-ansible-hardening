@@ -1,0 +1,5 @@
+controller ansible_connection=local
+windows10 ansible_shell_type='powershell' ansible_host=172.17.177.21 ansible_ssh_private_key_file=/vagrant/.vagrant/machines/windows10/virtualbox/insecure_private_key ansible_user='vagrant' ansible_become_user='vagrant'
+
+[windows]
+windows10

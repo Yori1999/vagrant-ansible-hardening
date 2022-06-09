@@ -1,0 +1,55 @@
+# encoding: utf-8
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require 'yaml'
+# Read the YAML file with the basic machine configuration for W10 machine
+windows_machine = YAML.load_file('windows_machine.yml')
+
+#ENV['VAGRANT_EXPERIMENTAL'] = 'disks'
+
+Vagrant.configure("2") do |config|
+  Vagrant.require_version ">= 2.1.18"
+
+  config.vm.define windows_machine['name'] do |machine|
+    machine.vm.box = windows_machine['box']
+    #config.vm.disk :disk, size: windows_machine['disk_size'], primary: true
+    machine.vm.network "private_network", ip: windows_machine['ip']
+    machine.vm.boot_timeout = 1800 # 30 minutes
+    machine.vm.guest = :windows
+  
+    machine.vm.network :forwarded_port, guest: 22, host: 2222, id: "ssh", auto_correct: true
+
+    machine.vm.provider "virtualbox" do |vb|
+      vb.name = windows_machine['name']
+      vb.gui = true # Display the VirtualBox GUI when booting the machine
+      vb.memory = windows_machine['ram'] # Customize the amount of memory on the VM
+      vb.cpus = windows_machine['cores']
+    end
+    
+    # Copy some required files
+    machine.vm.provision "file", source:"../../../../files/CLARA", destination:"CLARA" # This places the folder under Documents for the vagrant user
+    machine.vm.provision "file", source:"./insecure_private_key", destination:"/vagrant/.vagrant/machines/windows10/virtualbox/insecure_private_key"
+  
+    # Shared folder (host path, guest path)
+    machine.vm.synced_folder "shared", "/host_data", mount_options:  ["umask=077"]
+  end
+
+  config.vm.define "controller" do |machine|
+    machine.vm.box = "ubuntu/trusty64"
+    machine.vm.network "private_network", ip: "172.17.177.11"
+
+    machine.vm.provision "ansible_local" do |ansible|
+      ansible.playbook         = "roles/windows/windows_provisioning.yml"
+      ansible.verbose          = true
+      ansible.install          = true
+      ansible.limit            = "windows" # or only "nodes" group, etc.
+      ansible.inventory_path   = "inventory"
+      ansible.become           = "yes"
+      ansible.config_file      = "ansible.cfg"
+      ansible.version          = "latest"
+    end
+    machine.vm.synced_folder ".", "/vagrant", mount_options: ["umask=077"]
+  end
+
+end

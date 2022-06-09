@@ -1,0 +1,11 @@
+---
+- name: Provisioning roles for Windows workstations and servers
+  hosts: windows
+  become_method: runas
+  become: yes
+  gather_facts: true
+  ignore_errors: yes
+  roles:
+    - updates
+    - compliance/cis
+    
