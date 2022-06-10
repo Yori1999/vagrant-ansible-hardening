@@ -1,1 +1,3 @@
 /vagrantfiles/*/*/*/.vagrant/
+/vagrantfiles/*/*/*/provisioning/roles
+/vagrantfiles/*/*/*/*shared*/*
