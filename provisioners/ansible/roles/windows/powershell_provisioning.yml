@@ -1,0 +1,9 @@
+---
+- name: Provisioning role for disabling Powershell access on Windows workstations
+  hosts: windows
+  become_method: runas
+  become: yes
+  gather_facts: true
+  ignore_errors: yes
+  roles:
+    - powershell

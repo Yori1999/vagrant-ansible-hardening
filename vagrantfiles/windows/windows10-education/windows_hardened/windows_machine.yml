@@ -5,3 +5,4 @@ ram: 4096
 cores: 2
 ip: 172.17.177.21
 #disk_size: 80GB
+disable_powershell: False
