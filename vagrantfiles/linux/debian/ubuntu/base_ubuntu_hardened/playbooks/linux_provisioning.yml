@@ -1,0 +1,8 @@
+---
+- name: Roles de provisioning para workstations y servers on-premise Linux
+  hosts: nodes
+  gather_facts: true
+  become: true
+  ignore_errors: yes
+  roles:
+    - linux/compliance/scap
