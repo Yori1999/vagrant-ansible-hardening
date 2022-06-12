@@ -1,0 +1,39 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define "ubuntu" do |machine|
+    machine.vm.box = "hashicorp/bionic64"
+    machine.vm.network "private_network", ip: "172.17.177.21"
+    machine.vm.boot_timeout = 1800 # 30 minutes
+    machine.vm.network :forwarded_port, guest: 22, host: 2222, id: "ssh", auto_correct: true 
+
+    # This is the VirtualBox VM solution. Use this if you can, as it has more options and optimizations
+    machine.vm.provider "virtualbox" do |vb|
+      vb.memory = 1024
+      vb.gui = true
+    end
+    machine.vm.synced_folder "./ubuntu_shared", "/host_data", mount_options: ["umask=077"]
+  end
+
+  config.vm.define "controller" do |machine|
+    machine.vm.box = "ubuntu/trusty64"
+    machine.vm.network "private_network", ip: "172.17.177.11"
+
+    machine.vm.provision "file", source: "../../../../../provisioners/ansible/roles/linux", destination: "/vagrant/provisioning/ansible/roles/linux"
+
+    machine.vm.provision "ansible_local" do |ansible|
+      ansible.playbook         = "provisioning/ansible/roles/linux/linux_provisioning.yml"
+      ansible.verbose          = true
+      ansible.install          = true
+      ansible.limit            = "nodes" # or only "nodes" group, etc.
+      ansible.inventory_path   = "provisioning/ansible/inventory"
+      ansible.become           = "yes"
+      ansible.version          = "latest"
+      ansible.config_file      = "provisioning/ansible/ansible.cfg"
+    end
+    machine.vm.synced_folder ".", "/vagrant", mount_options: ["umask=077"]
+  end
+
+end

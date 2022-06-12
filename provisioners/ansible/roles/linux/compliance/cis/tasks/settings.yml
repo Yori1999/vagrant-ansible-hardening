@@ -1,0 +1,58 @@
+---
+- name: sudo configuration
+  include_tasks: sudo.yml
+  tags:
+   - configuration
+
+- name: Filesystem policies
+  include_tasks: filesystem.yml
+  tags:
+   - configuration
+
+# - name: Logrotate policies
+#   include_tasks: logrotate.yml
+#   tags:
+#    - configuration
+
+# - name: Hardening policies for OS users
+#   include_tasks: users.yml 
+#   tags:
+#   - configuration
+
+# - name: Hardening policies for ssh 
+#   include_tasks: ssh.yml
+#   tags:
+#    - configuration
+
+# - name: Hardening policies for sysctl 
+#   include_tasks: sysctl.yml
+#   tags:
+#    - configuration
+
+# - name: Filesystem policies
+#   include_tasks: filesystems.yml
+#   tags:
+#    - configuration
+
+# - name: Network policies
+#   include_tasks: network.yml
+#   tags:
+#    - configuration
+
+# - name: Cron policies
+#   include_tasks: cron.yml
+#   tags:
+#    - configuration
+
+# - name: Hardening policies for auditd 
+#   include_tasks: auditd.yml
+#   tags:
+#    - configuration
+
+# - name: Hardening policies for time synchronization 
+#   include_tasks: timesync.yml
+#   when: >
+#     'site1_ntp_servers' not in group_names and
+#     'site2_ntp_servers' not in group_names 
+#   tags:
+#    - configuration

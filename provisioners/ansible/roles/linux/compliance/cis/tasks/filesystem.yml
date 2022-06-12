@@ -1,0 +1,317 @@
+---
+# Disable unused filesystems
+# This task takes care of the following CIS recommendations (CIS Ubuntu Linux 18.04 LTS Benchmark, v.2.1.0):
+# CIS, 1.1.1.1 - Ensure mounting of cramfs filesystems is disabled
+# CIS, 1.1.1.2 - Ensure mounting of freevxfs filesystems is disabled
+# CIS, 1.1.1.3 - Ensure mounting of jffs2 filesystems is disabled
+# CIS, 1.1.1.4 - Ensure mounting of hfs filesystems is disabled
+# CIS, 1.1.1.5 - Ensure mounting of hfsplus filesystems is disabled
+# CIS, 1.1.1.6 - Ensure mounting of udf filesystems is disabled
+- name: Ensure mounting of unused filesystems is disabled
+  block:
+    - name: Restrict dynamic mounting or unmounting of filesystems
+      lineinfile:
+        create: true
+        dest: '/etc/modprobe.d/{{ item }}.conf'
+        regexp: '{{  item }}'
+        line: 'install {{ item }} /bin/true'
+      loop:
+        - cramfs
+        - freevxfs
+        - jffs2
+        - hfs
+        - hfsplus
+        - udf
+    - name: Run command to unload the module
+      command: rmmod '{{  item }}'
+      loop:
+        - cramfs
+        - freevxfs
+        - jffs2
+        - hfs
+        - hfsplus
+        - udf
+  tags: ['configuration']
+
+# Ensure /tmp is configured and mounted with nodev,nosuid,noexec options
+# This task takes care of the following CIS recommendations (CIS Ubuntu Linux 18.04 LTS Benchmark, v.2.1.0):
+# CIS, 1.1.2 - Ensure /tmp is configured
+# CIS, 1.1.3 - Ensure nodev option set on /tmp partition
+# CIS, 1.1.4 - Ensure nosuid option set on /tmp partition
+# CIS, 1.1.5 - Ensure noexec option set on /tmp partition
+- name: /tmp must be mounted with nodev,nosuid,noexec options set
+  block:
+    - name: Check information associated to mountpoint
+      command: findmnt '/tmp'
+      register: device_name
+      failed_when: device_name.rc > 1
+      changed_when: false
+    - name: Create mount_info dictionary variable
+      set_fact:
+        mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
+      with_together:
+        - '{{ device_name.stdout_lines[0].split() | list | lower }}'
+        - '{{ device_name.stdout_lines[1].split() | list }}'
+      when:
+        - device_name.stdout is defined and device_name.stdout_lines is defined
+        - (device_name.stdout | length > 0)
+    - name: If /tmp not mounted, craft mount_info manually
+      set_fact:
+        mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
+      with_together:
+        - - target
+          - source
+          - fstype
+          - options
+        - - /tmp
+          - tmpfs
+          - tmpfs
+          - defaults
+      when:
+        - ("" | length == 0)
+        - (device_name.stdout | length == 0)
+    - name: Make sure nodev option is part of the /tmp options
+      set_fact:
+        mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',nodev'' }) }}'
+      when:
+        - mount_info is defined and "nodev" not in mount_info.options
+    - name: Ensure /tmp is mounted with nodev option
+      mount:
+        path: /tmp
+        src: '{{ mount_info.source }}'
+        opts: '{{ mount_info.options }}'
+        state: mounted
+        fstype: '{{ mount_info.fstype }}'
+      when:
+        - (device_name.stdout is defined and (device_name.stdout | length > 0)) or ("" | length == 0)
+    - name: Make sure nosuid option is part of the /tmp options
+      set_fact:
+        mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',nosuid'' }) }}'
+      when:
+        - mount_info is defined and "nosuid" not in mount_info.options
+    - name: Ensure /tmp is mounted with nosuid option
+      mount:
+        path: /tmp
+        src: '{{ mount_info.source }}'
+        opts: '{{ mount_info.options }}'
+        state: mounted
+        fstype: '{{ mount_info.fstype }}'
+      when:
+        - (device_name.stdout is defined and (device_name.stdout | length > 0)) or ("" | length == 0)
+    - name: Make sure noexec option is part of the /tmp options
+      set_fact:
+        mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',noexec'' }) }}'
+      when:
+        - mount_info is defined and "noexec" not in mount_info.options
+    - name: Ensure /tmp is mounted with noexec option
+      mount:
+        path: /tmp
+        src: '{{ mount_info.source }}'
+        opts: '{{ mount_info.options }}'
+        state: mounted
+        fstype: '{{ mount_info.fstype }}'
+      when:
+        - (device_name.stdout is defined and (device_name.stdout | length > 0)) or ("" | length == 0)
+  tags: ['configuration']
+
+# Ensure /dev/shm is configured and mounted with nodev,nosuid,noexec options
+# This task takes care of the following CIS recommendations (CIS Ubuntu Linux 18.04 LTS Benchmark, v.2.1.0):
+# CIS, 1.1.6 - Ensure /dev/shm is configured
+# CIS, 1.1.7 - Ensure nodev option set on /dev/shm partition
+# CIS, 1.1.8 - Ensure nosuid option set on /dev/shm partition
+# CIS, 1.1.9 - Ensure noexec option set on /dev/shm partition
+- name: /dev/shm must be mounted with nodev,nosuid,noexec options set
+  block:
+    - name: Check information associated to mountpoint
+      command: findmnt '/dev/shm'
+      register: device_name
+      failed_when: device_name.rc > 1
+      changed_when: false
+    - name: Create mount_info dictionary variable
+      set_fact:
+        mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
+      with_together:
+        - '{{ device_name.stdout_lines[0].split() | list | lower }}'
+        - '{{ device_name.stdout_lines[1].split() | list }}'
+      when:
+        - device_name.stdout is defined and device_name.stdout_lines is defined
+        - (device_name.stdout | length > 0)
+    - name: If /dev/shm not mounted, craft mount_info manually
+      set_fact:
+        mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
+      with_together:
+        - - target
+          - source
+          - fstype
+          - options
+        - - /dev/shm
+          - tmpfs
+          - tmpfs
+          - defaults
+      when:
+        - ("" | length == 0)
+        - (device_name.stdout | length == 0)
+    - name: Make sure nodev option is part of the /dev/shm options
+      set_fact:
+        mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',nodev'' }) }}'
+      when:
+        - mount_info is defined and "nodev" not in mount_info.options
+    - name: Ensure /dev/shm is mounted with nodev option
+      mount:
+        path: /dev/shm
+        src: '{{ mount_info.source }}'
+        opts: '{{ mount_info.options }}'
+        state: mounted
+        fstype: '{{ mount_info.fstype }}'
+      when:
+        - (device_name.stdout is defined and (device_name.stdout | length > 0)) or ("" | length == 0)
+    - name: Make sure nosuid option is part of the /dev/shm options
+      set_fact:
+        mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',nosuid'' }) }}'
+      when:
+        - mount_info is defined and "nosuid" not in mount_info.options
+    - name: Ensure /dev/shm is mounted with nosuid option
+      mount:
+        path: /dev/shm
+        src: '{{ mount_info.source }}'
+        opts: '{{ mount_info.options }}'
+        state: mounted
+        fstype: '{{ mount_info.fstype }}'
+      when:
+        - (device_name.stdout is defined and (device_name.stdout | length > 0)) or ("" | length == 0)
+    - name: Make sure noexec option is part of the /dev/shm options
+      set_fact:
+        mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',noexec'' }) }}'
+      when:
+        - mount_info is defined and "noexec" not in mount_info.options
+    - name: Ensure /dev/shm is mounted with noexec option
+      mount:
+        path: /dev/shm
+        src: '{{ mount_info.source }}'
+        opts: '{{ mount_info.options }}'
+        state: mounted
+        fstype: '{{ mount_info.fstype }}'
+      when:
+        - (device_name.stdout is defined and (device_name.stdout | length > 0)) or ("" | length == 0)
+  tags: ['configuration']
+
+# Ensure /var/tmp is configured and mounted with nodev,nosuid,noexec options
+# This task takes care of the following CIS recommendations (CIS Ubuntu Linux 18.04 LTS Benchmark, v.2.1.0):
+# CIS, 1.1.12 - Ensure /var/tmp partition includes the nodev option
+# CIS, 1.1.13 - Ensure /var/tmp partition includes the nosuid option
+# CIS, 1.1.14 - Ensure /var/tmp partition includes the noexec option
+- name: /var/tmp must be mounted with nodev,nosuid,noexec options set
+  block:
+    - name: Check information associated to mountpoint
+      command: findmnt '/var/tmp'
+      register: device_name
+      failed_when: device_name.rc > 1
+      changed_when: false
+    - name: Create mount_info dictionary variable
+      set_fact:
+        mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
+      with_together:
+        - '{{ device_name.stdout_lines[0].split() | list | lower }}'
+        - '{{ device_name.stdout_lines[1].split() | list }}'
+      when:
+        - device_name.stdout is defined and device_name.stdout_lines is defined
+        - (device_name.stdout | length > 0)
+    - name: Make sure nodev option is part of the /var/tmp options
+      set_fact:
+        mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',nodev'' }) }}'
+      when:
+        - mount_info is defined and "nodev" not in mount_info.options
+    - name: Ensure /var/tmp is mounted with nodev option
+      mount:
+        path: /var/tmp
+        src: '{{ mount_info.source }}'
+        opts: '{{ mount_info.options }}'
+        state: mounted
+        fstype: '{{ mount_info.fstype }}'
+      when:
+        - (device_name.stdout is defined and (device_name.stdout | length > 0)) or ("" | length == 0)
+    - name: Make sure nosuid option is part of the /var/tmp options
+      set_fact:
+        mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',nosuid'' }) }}'
+      when:
+        - mount_info is defined and "nosuid" not in mount_info.options
+    - name: Ensure /var/tmp is mounted with nosuid option
+      mount:
+        path: /var/tmp
+        src: '{{ mount_info.source }}'
+        opts: '{{ mount_info.options }}'
+        state: mounted
+        fstype: '{{ mount_info.fstype }}'
+      when:
+        - (device_name.stdout is defined and (device_name.stdout | length > 0)) or ("" | length == 0)
+    - name: Make sure noexec option is part of the /var/tmp options
+      set_fact:
+        mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',noexec'' }) }}'
+      when:
+        - mount_info is defined and "noexec" not in mount_info.options
+    - name: Ensure /var/tmp is mounted with noexec option
+      mount:
+        path: /var/tmp
+        src: '{{ mount_info.source }}'
+        opts: '{{ mount_info.options }}'
+        state: mounted
+        fstype: '{{ mount_info.fstype }}'
+      when:
+        - (device_name.stdout is defined and (device_name.stdout | length > 0)) or ("" | length == 0)
+  tags: ['configuration']
+
+# Ensure /home is configured and mounted with nodev option
+# This task takes care of the following CIS recommendations (CIS Ubuntu Linux 18.04 LTS Benchmark, v.2.1.0):
+# CIS, 1.1.18 - Ensure /home partition includes the nodev option
+# - name: /home must be mounted with nodev option set
+#   block:
+#     - name: Check information associated to mountpoint
+#       command: findmnt '/home'
+#       register: device_name
+#       failed_when: device_name.rc > 1
+#       changed_when: false
+#     - name: Create mount_info dictionary variable
+#       set_fact:
+#         mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
+#       with_together:
+#         - '{{ device_name.stdout_lines[0].split() | list | lower }}'
+#         - '{{ device_name.stdout_lines[1].split() | list }}'
+#       when:
+#         - device_name.stdout is defined and device_name.stdout_lines is defined
+#         - (device_name.stdout | length > 0)
+#     - name: Make sure nodev option is part of the /home options
+#       set_fact:
+#         mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',nodev'' }) }}'
+#       when:
+#         - mount_info is defined and "nodev" not in mount_info.options
+#     - name: Ensure /home is mounted with nodev option
+#       mount:
+#         path: /home
+#         src: '{{ mount_info.source }}'
+#         opts: '{{ mount_info.options }}'
+#         state: mounted
+#         fstype: '{{ mount_info.fstype }}'
+#       when:
+#         - (device_name.stdout is defined and (device_name.stdout | length > 0)) or ("" | length == 0)    
+#   tags: ['configuration']
+
+- name: CIS, 1.1.22 - Ensure sticky bit is set on all world-writable directories
+  command: 
+    cmd: df --local -P | awk '{if (NR!=1) print $6}' | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null | xargs -I '{}' chmod a+t '{}'
+
+# CIS recommendation 1.1.23 (Disable Automounting) has a profile applicability of Level 1 for servers, but Level 2 for Workstations
+
+# CIS recommendation 1.1.24 (Disable USB storage) has a profile applicability of Level 1 for servers, but Level 2 for Workstations
+- name: CIS, 1.1.24 - Disable USB Storage
+  block:
+    - name: Edit or create file in /etc/modprobe.d/
+      lineinfile:
+        create: true
+        dest: '/etc/modprobe.d/usb-storage.conf'
+        regexp: 'usb-storage'
+        line: 'install usb-storage /bin/true'
+      when: (usbstorage_disabled|default(False) == True)
+    - name: Run command to unload the module
+      command: rmmod usb-storage
+      when: (usbstorage_disabled|default(False) == True)
+  tags: ['configuration']

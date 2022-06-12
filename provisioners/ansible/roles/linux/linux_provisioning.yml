@@ -1,0 +1,9 @@
+---
+- name: Provisioning roles for Linux workstations and on-premise servers
+  hosts: nodes
+  gather_facts: true
+  become: true
+  ignore_errors: yes
+  roles:
+    - compliance/cis
+    #- compliance/scap

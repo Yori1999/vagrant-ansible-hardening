@@ -1,0 +1,73 @@
+---
+- name: Make sure that software required by CIS, NIST, DISA standards is present
+  apt:
+    name: '{{ packages_present }}'
+    state: present
+    update_cache: yes
+  when:
+    - ansible_facts['os_family']|lower == "debian"
+  tags: ['install']
+
+- name: Install and enable systemd-timesyncd 
+  block: 
+    - name: Ensure systemd-timesyncd is installed
+      package:
+        name: systemd-timesyncd
+        state: present
+
+    - name: Gather the package facts
+      package_facts:
+        manager: auto
+
+    - name: Enable service systemd-timesyncd
+      service:
+        name: systemd-timesyncd
+        enabled: 'yes'
+        state: started
+        masked: 'no'
+      when:
+        - '"systemd-timesyncd" in ansible_facts.packages'
+  tags: ['install']
+
+# - name: Install up-to-date SCAP guides
+#   block:
+#     - name: Evaluate Ubuntu codename
+#       shell: lsb_release -cs
+#       no_log: true
+#       register: codename
+
+#     - name: Make sure destination folder exists
+#       file:
+#         path: '{{ scap_guides_folder }}'
+#         state: directory
+#         owner: root
+#         group: root
+#         mode: '0755'
+
+#     - name: Download and extract SCAP guides
+#       unarchive:
+#         src: 'https://github.com/ComplianceAsCode/content/releases/download/v{{ scap_guides_version }}/scap-security-guide-{{ scap_guides_version }}.zip'
+#         dest: '{{ scap_guides_folder }}'
+#         remote_src: yes
+
+#     - name: Download and extract OVAL guides
+#       command: /bin/bash -c "wget https://security-metadata.canonical.com/oval/com.ubuntu.{{ codename.stdout }}.usn.oval.xml.bz2 | bunzip2"
+#       args:
+#         chdir: '{{ scap_guides_folder }}'
+#         creates: '{{ scap_guides_folder }}/com.ubuntu.{{ codename.stdout }}.usn.oval.xml'
+#   tags: ['install']
+
+- name: Filesystem integrity checking policies (make sure AIDE is installed)
+  include_tasks: filesystem_integrity_checking.yml
+  when: (aide_required|default(False) == True)
+  tags: ['install']
+
+- name: Make sure that software prohibited by CIS standard is absent
+  apt:
+    name: '{{ packages_absent }}'
+    state: absent
+    update_cache: yes
+  when:
+    - ansible_facts['os_family']|lower == "debian"
+  tags: ['install']
+
