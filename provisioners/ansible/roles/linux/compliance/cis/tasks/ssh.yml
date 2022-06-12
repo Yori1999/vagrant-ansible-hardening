@@ -1,0 +1,80 @@
+---
+# CONFIGURE SSH SERVER
+
+# This task comprises the following CIS recommendations:
+# CIS, 5.3.1 - Ensure permissions on /etc/ssh/sshd_config are configured
+# CIS, 5.3.5 - Ensure SSH LogLevel is appropriate -> LogLevel INFO
+# CIS, 5.3.6 - Ensure SSH X11 forwarding is disabled -> If you wish to enable it (not recommended), set enable_ssh_xforwarding=True
+# CIS, 5.3.7 - Ensure SSH MaxAuthTries is set to 4 or less
+# CIS, 5.3.8 - Ensure SSH IgnoreRhosts is enabled
+# CIS, 5.3.9 - Ensure SSH HostbasedAuthentication is disabled
+# CIS, 5.3.10 - Ensure SSH root login is disabled
+# CIS, 5.3.11 - Ensure SSH PermitEmptyPasswords is disabled
+# CIS, 5.3.12 - Ensure SSH PermitUserEnvironment is disabled
+# CIS, 5.3.13 - Ensure only strong Ciphers are used
+# CIS, 5.3.14 - Ensure only strong MAC algorithms are used
+# CIS, 5.3.15 - Ensure only strong Key Exchange algorithms are used
+# CIS, 5.3.16 - Ensure SSH Idle Timeout Interval is configured -> set the parameters according to site policy, but ClientAliveInterval between 1 and 900 and ClientAliveCountMax of 0
+# CIS, 5.3.17 - Ensure SSH LoginGraceTime is set to one minute or less
+# CIS, 5.3.20 - Ensure SSH AllowTcpForwarding is disabled -> be careful as this has profile applicability of L2 for both servers and workstations
+# CIS, 5.3.21 - Ensure SSH MaxStartups is configured (to protect the system from having too many pending authentication connection attempts)
+# CIS, 5.3.22 - Ensure SSH MaxSessions is limited -> MaxSessions should be 10 or less
+# Once all configuration changes have been made to /etc/ssh/sshd_config, the sshd configuration must be reloaded. There's a handler for that
+- name: SSH configuration according to CIS standard
+  lineinfile: 
+    path: /etc/ssh/sshd_config 
+    create: false
+    owner: root
+    group: root
+    mode: '0600'
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+    state: present
+    insertbefore: ^[#\s]*Match
+  loop:
+    - regexp: '(?i)^\s*PermitEmptyPasswords\s+'
+      line: 'PermitEmptyPasswords no'
+    - regexp: '(?i)^\s*PermitRootLogin\s+'
+      line: 'PermitRootLogin no'
+    - regexp: '(?i)^\s*Protocol\s+'
+      line: 'Protocol 2'
+    - regexp: '(?i)^\s*Ciphers\s+'
+      line: 'Ciphers {{ ssh_simmetric_ciphers }}'
+    - regexp: '(?i)^\s*MACs\s+'
+      line: 'MACs {{ ssh_mac_ciphers }}'
+    - regexp: '(?i)^\s*HostKeyAlgorithms\s+'
+      line: 'HostKeyAlgorithms {{ ssh_hostkey_ciphers }}'
+    - regexp: '(?i)^\s*KexAlgorithms\s+'
+      line: 'KexAlgorithms {{ ssh_kex_ciphers }}'
+    - regexp: '(?i)^\s*AllowTcpForwarding\s+'
+      line: 'AllowTcpForwarding no'
+    - regexp: '(?i)^\s*IgnoreRhosts\s+'
+      line: 'IgnoreRhosts yes'
+    - regexp: '(?i)^\s*HostbasedAuthentication\s+'
+      line: 'HostbasedAuthentication no'
+    - regexp: '(?i)^\s*PermitUserEnvironment\s+'
+      line: 'PermitUserEnvironment no'
+    - regexp: '(?i)^\s*ClientAliveCountMax\s+'
+      line: 'ClientAliveCountMax {{ ssh_clientalivecountmax }}'
+    - regexp: '(?i)^\s*ClientAliveInterval\s+'
+      line: 'ClientAliveInterval {{ ssh_clientaliveinterval }}'
+    - regexp: '(?i)^\s*Compression\s+'
+      line: 'Compression no'
+    - regexp: '(?i)^\s*LogLevel\s+'
+      line: 'LogLevel INFO'
+    - regexp: '(?i)^\s*MaxAuthTries\s+'
+      line: 'MaxAuthTries {{ ssh_maxauthtries }}'
+    - regexp: '(?i)^\s*MaxSessions\s+'
+      line: 'MaxSessions {{ ssh_maxsessions }}'
+    - regexp: '(?i)^\s*maxstartups\s+'
+      line: 'maxstartups 10:30:60'
+    - regexp: '(?i)^\s*LoginGraceTime\s+'
+      line: 'LoginGraceTime {{ ssh_login_grace_time }}'
+    - regexp: '(?i)^\s*TCPKeepAlive\s+'
+      line: 'TCPKeepAlive no'
+    - regexp: '(?i)^\s*X11Forwarding\s+'
+      line: "X11Forwarding {{ (enable_ssh_xforwarding|default(False) == True) | ternary('yes', 'no') }}"
+    - regexp: '(?i)^\s*AllowAgentForwarding\s+'
+      line: "AllowAgentForwarding {{ (enable_ssh_xforwarding|default(False) == True) | ternary('yes', 'no') }}"
+  notify: restart_sshd 
+  tags: ['configuration']

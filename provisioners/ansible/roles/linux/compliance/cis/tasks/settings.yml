@@ -14,15 +14,10 @@
 #   tags:
 #    - configuration
 
-# - name: Hardening policies for OS users
-#   include_tasks: users.yml 
-#   tags:
-#   - configuration
-
-# - name: Hardening policies for ssh 
-#   include_tasks: ssh.yml
-#   tags:
-#    - configuration
+- name: Hardening policies for ssh 
+  include_tasks: ssh.yml
+  tags:
+   - configuration
 
 # - name: Hardening policies for sysctl 
 #   include_tasks: sysctl.yml

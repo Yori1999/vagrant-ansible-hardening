@@ -1,4 +1,8 @@
 ---
+# This task includes the following CIS recommendations:
+# CIS, 1.3.1 - Ensure AIDE is installed
+# CIS, 1.3.2 - Ensure filesystem integrity is regularly checked
+# You can choose to mail the report generated after each periodic execution of AIDE to a designated user (set linux_admin_user)
 - name: Install AIDE (Advanced Intrusion Detection Environment)
   block:
     - name: Ensure AIDE is installed
@@ -35,5 +39,5 @@
         hour: '13'
         weekday: '5'
         user: 'root'
-        job: /usr/bin/aide --config /etc/aide/aide.conf --check | mail -s "AIDE report" {{ vault_linux_admin_user }}
+        job: /usr/bin/aide --config /etc/aide/aide.conf --check #| mail -s "AIDE report" {{ linux_admin_user }}
   tags: ['install']
