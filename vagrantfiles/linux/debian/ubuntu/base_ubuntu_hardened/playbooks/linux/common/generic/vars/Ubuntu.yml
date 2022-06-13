@@ -1,4 +1,0 @@
----
-file_environment: '/etc/environment'
-file_timezone: '/etc/timezone'
-file_apt_conf: '/etc/apt/apt.conf.d/proxy.conf'

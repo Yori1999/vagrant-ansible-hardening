@@ -1,8 +1,0 @@
----
-- name: Asegurar que apparmor esta arrancado
-  systemd:
-    name: '{{ item }}'
-    state: started
-  loop:
-    - apparmor
-  tags: ['services']

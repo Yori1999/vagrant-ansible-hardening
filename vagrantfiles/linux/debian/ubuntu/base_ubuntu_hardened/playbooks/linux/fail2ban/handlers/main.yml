@@ -1,9 +1,0 @@
-- name: restart_fail2ban
-  systemd:
-    state: restarted
-    name: fail2ban
-
-- name: reload_fail2ban
-  systemd:
-    state: reloaded
-    name: fail2ban

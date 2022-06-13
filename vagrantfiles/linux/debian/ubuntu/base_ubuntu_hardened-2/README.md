@@ -1,2 +1,0 @@
-A base Ubuntu machine with almost no initial conifiguration, that gets provisioned via Ansible with playbooks that comply with several benchmarks' security policies (including CIS)
-Once lynis is installed this machine jumps from an initial score of 52 (before provisioning) to a score of 74 (after provisioning)

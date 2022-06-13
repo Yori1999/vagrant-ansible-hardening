@@ -1,8 +1,0 @@
----
-- name: Make sure fail2ban is started
-  systemd:
-    name: fail2ban
-    state: started
-  when:
-    - ansible_facts['os_family']|lower == "debian"
-  tags: ['services']

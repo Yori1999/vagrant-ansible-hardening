@@ -1,7 +1,0 @@
----
-- name: restart_logstash
-  systemd:
-    name: logstash
-    state: restarted
-  when:
-    - ansible_facts['os_family']|lower == "debian"
