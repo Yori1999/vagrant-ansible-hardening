@@ -14,6 +14,21 @@
 #   tags:
 #    - configuration
 
+- name: Hardening policies for user accounts and environments
+  include_tasks: user_accounts.yml 
+  tags:
+  - configuration
+
+- name: Additional hardening policies for passwords
+  include_tasks: additional_password_config.yml 
+  tags:
+  - configuration
+
+- name: Additional hardening policies
+  include_tasks: additional_process_hardening.yml 
+  tags:
+  - configuration
+
 - name: Hardening policies for ssh 
   include_tasks: ssh.yml
   tags:
@@ -24,20 +39,15 @@
 #   tags:
 #    - configuration
 
-# - name: Filesystem policies
-#   include_tasks: filesystems.yml
-#   tags:
-#    - configuration
+- name: Network policies
+  include_tasks: network_configuration.yml
+  tags:
+   - configuration
 
-# - name: Network policies
-#   include_tasks: network.yml
-#   tags:
-#    - configuration
-
-# - name: Cron policies
-#   include_tasks: cron.yml
-#   tags:
-#    - configuration
+- name: Time-based job schedulers configuration policies
+  include_tasks: time_based_job_schedulers_config.yml
+  tags:
+   - configuration
 
 # - name: Hardening policies for auditd 
 #   include_tasks: auditd.yml

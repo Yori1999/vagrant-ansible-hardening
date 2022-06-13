@@ -62,7 +62,7 @@
         owner: '{{ ansible_ssh_user }}'
         group: '{{ ansible_ssh_user }}'
         mode: 0750
-
+    
     - name: Ensure interactive local users are the owners of their respective initialization files
       shell:
         cmd: |-
@@ -71,7 +71,7 @@
               sed -i 's/^\([\s]*umask\s*\)/#\1/g' $file
             done
           done
-
+    
     - name: Ensure interactive local users are the group-owners of their respective initialization files
       command:
         cmd: awk -F':' '{ if ($3 >= 1000 && $3 != 65534) system("chgrp -f " $3" "$6"/.[^\.]?*") }' /etc/passwd

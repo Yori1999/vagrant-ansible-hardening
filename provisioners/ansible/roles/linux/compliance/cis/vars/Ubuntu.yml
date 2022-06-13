@@ -57,20 +57,21 @@ var_sudo_logfile: '/var/log/sudo.log'
 
 grub2_conf_file: '/etc/default/grub'
 
+# PAM, password and account settings
 minlen: 14
+minclass: 4
+retry: 3
 lcredit: -1
 ucredit: -1
 dcredit: -1
 ocredit: -1
 difok: 5
-retry: 3
-minclass: 4
 pwd_remember: 5
-pwd_max_days: 99999
+pwd_max_days: 365
 pwd_min_days: 1
 pwd_warn_age: 7
-max_failed_login_attempts: 10 
-unlock_timeout: 300 
+max_failed_login_attempts: 5 
+unlock_timeout: 600 
 user_inactivity: 30
 default_umask: '027'
 
@@ -80,3 +81,4 @@ histsize: 30
 session_timeout: 600
 
 aide_required: True
+

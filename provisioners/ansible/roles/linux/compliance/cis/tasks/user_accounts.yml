@@ -1,0 +1,151 @@
+---
+# SET SHADOW PASSWORD SUITE PARAMETERS
+# Though many of the password control parameters have been moved to PAM, some params are still available through the Shadow Password Suite
+# This task includes the following CIS recommendations:
+# CIS, 5.5.1.1 - Ensure minimum days between password changes is configured -> no less than 1 day
+# CIS, 5.5.1.2 - Ensure password expiration is 365 days or less -> must be greater than PASS_MIN_DAYS
+# CIS, 5.5.1.3 - Ensure password expiration warning days is 7 or more
+
+- name: Configure password settings (Shadow Password Suite parameters)
+  lineinfile: 
+    path: /etc/login.defs
+    create: false
+    owner: root
+    group: root
+    mode: '0644'
+    regexp: '{{ param.regexp }}'
+    line: '{{ param.line }}'
+    state: present
+  loop:
+    - regexp: '^#?\s?UMASK\s'
+      line: 'UMASK 077'
+    - regexp: '^#?\s?PASS_MAX_DAYS\s'
+      line: 'PASS_MAX_DAYS {{ pwd_max_days }}'
+    - regexp: '^#?\s?PASS_MIN_DAYS\s'
+      line: 'PASS_MIN_DAYS {{ pwd_min_days }}'
+    - regexp: '^#?\s?PASS_WARN_AGE\s'
+      line: 'PASS_WARN_AGE {{ pwd_warn_age }}'
+    - regexp: '^#?\s?ENCRYPT_METHOD\s'
+      line: 'ENCRYPT_METHOD SHA512'
+    - regexp: '^#?\s?SHA_CRYPT_MIN_ROUNDS\s'
+      line: 'SHA_CRYPT_MIN_ROUNDS 10000'
+    - regexp: '^#?\s?SHA_CRYPT_MAX_ROUNDS\s'
+      line: 'SHA_CRYPT_MAX_ROUNDS 10000'
+  loop_control:
+    loop_var: param
+  tags: ['configuration']
+
+- name: CIS, 5.5.1.4 - Ensure inactive password lock is 30 days or less
+  command:
+    cmd: useradd -D -f {{ user_inactivity }}
+
+- name: CIS, 5.5.1.4 - Disable users after expiration time
+  lineinfile:
+    path: /etc/default/useradd
+    create: false
+    owner: root
+    group: root
+    mode: '0644'
+    regexp: '^(#\s+INACTIVE|INACTIVE)=.*'
+    line: 'INACTIVE={{ user_inactivity }}'
+  tags: ['configuration']
+
+- name: CIS, 5.5.3 - Ensure default group for the root account is GID 0
+  command:
+    cmd: usermod -g 0 root
+
+# Configure umask for interactive shells
+- name: CIS, 5.5.4 - Ensure default user umask is 027 or more restrictive
+  lineinfile: 
+    path: '{{ item }}'
+    create: true
+    owner: root
+    group: root
+    mode: '0644'
+    regexp: '^umask\s+'
+    line:  'umask {{ default_umask }}'
+  loop:
+    - /etc/profile
+    - /etc/bash.bashrc
+    - /etc/bashrc
+    - /etc/csh.cshrc
+  tags: ['configuration']
+
+- name: CIS, 5.5.5 - Ensure default user shell timeout is 900 seconds or less
+  lineinfile:
+    path: '/etc/profile.d/tmout.sh'
+    create: true
+    state: present
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+    regexp: '^TMOUT\s+'
+    line: 'TMOUT={{ session_timeout }}'
+  tags: ['configuration']
+
+- name: CIS, 5.7 - Ensure access to the su command is restricted
+  replace:
+    path: /etc/pam.d/su
+    regexp: '^#\s+auth\s*required\s*pam_wheel.so\s?.*$'
+    replace: 'auth required pam_wheel.so use_uid'
+  tags: ['configuration']
+
+
+- name: OS users
+  block:
+    - name: Ensure ownership and mode on /etc/passwd
+      file:
+        path: '/etc/passwd'
+        owner: '0'
+        group: '0'
+        mode: '0644'
+
+    - name: Ensure ownership and mode on /etc/group
+      file:
+        path: '/etc/group'
+        owner: '0'
+        group: '0'
+        mode: '0644'
+
+    - name: Ensure ownership and mode on /etc/shadow
+      file:
+        path: '/etc/shadow'
+        owner: '0'
+        group: '42'
+        mode: '0640'
+
+    - name: Ensure ownership and mode on /etc/shadow-
+      file:
+        path: '/etc/shadow-'
+        owner: '0'
+        group: '42'
+        mode: '0640'
+
+    - name: Ensure ownership and mode on /etc/gshadow
+      file:
+        path: '/etc/gshadow'
+        owner: '0'
+        group: '42'
+        mode: '0640'
+  tags: ['configuration']
+
+- name: Ensure each user has adequate permissions for their home directory and is owner and group-owner of their initialization files
+  block:
+    - name: CIS, 6.2.6 - Ensure users' home directories permissions are 750 or more restrictive (vagrant)
+      file:
+        path: '/home/vagrant'
+        owner: vagrant
+        group: vagrant
+        mode: 0750
+    - name: Ensure interactive local users are the owners of their respective initialization files
+      shell:
+        cmd: |-
+          for dir in $(awk -F':' '{ if ($3 >= 1000 && $3 != 65534) print $6}' /etc/passwd); do
+            for file in $(find $dir -maxdepth 1 -type f -name ".*"); do
+              sed -i 's/^\([\s]*umask\s*\)/#\1/g' $file
+            done
+          done
+    - name: Ensure interactive local users are the group-owners of their respective initialization files
+      command:
+        cmd: awk -F':' '{ if ($3 >= 1000 && $3 != 65534) system("chgrp -f " $3" "$6"/.[^\.]?*") }' /etc/passwd
+  tags: ['configuration']

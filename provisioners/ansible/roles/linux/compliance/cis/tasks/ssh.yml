@@ -16,6 +16,7 @@
 # CIS, 5.3.15 - Ensure only strong Key Exchange algorithms are used
 # CIS, 5.3.16 - Ensure SSH Idle Timeout Interval is configured -> set the parameters according to site policy, but ClientAliveInterval between 1 and 900 and ClientAliveCountMax of 0
 # CIS, 5.3.17 - Ensure SSH LoginGraceTime is set to one minute or less
+# CIS, 5.3.19 - Ensure SSH PAM is enabled
 # CIS, 5.3.20 - Ensure SSH AllowTcpForwarding is disabled -> be careful as this has profile applicability of L2 for both servers and workstations
 # CIS, 5.3.21 - Ensure SSH MaxStartups is configured (to protect the system from having too many pending authentication connection attempts)
 # CIS, 5.3.22 - Ensure SSH MaxSessions is limited -> MaxSessions should be 10 or less
@@ -72,6 +73,8 @@
       line: 'LoginGraceTime {{ ssh_login_grace_time }}'
     - regexp: '(?i)^\s*TCPKeepAlive\s+'
       line: 'TCPKeepAlive no'
+    - regexp: '(?i)^\s*UsePAM\s+'
+      line: 'UsePAM yes'
     - regexp: '(?i)^\s*X11Forwarding\s+'
       line: "X11Forwarding {{ (enable_ssh_xforwarding|default(False) == True) | ternary('yes', 'no') }}"
     - regexp: '(?i)^\s*AllowAgentForwarding\s+'
