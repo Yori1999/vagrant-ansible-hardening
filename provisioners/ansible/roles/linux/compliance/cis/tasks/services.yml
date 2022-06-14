@@ -19,23 +19,3 @@
   when:
     - ansible_facts['os_family']|lower == "debian"
   tags: ['services']
-
-# - name: Disable apport.socket service
-#   block:
-#     - name: Unit Socket Exists - apport.socket
-#       command: systemctl list-unit-files apport.socket
-#       args:
-#         warn: false
-#       register: socket_file_exists
-#       changed_when: false
-#       ignore_errors: true
-#       check_mode: false
-
-#     - name: Disable socket apport
-#       systemd:
-#         name: apport.socket
-#         enabled: 'no'
-#         state: stopped
-#         masked: yes
-#       when: '"apport.socket" in socket_file_exists.stdout_lines[1]'
-#   tags: ['services']

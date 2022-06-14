@@ -9,7 +9,7 @@
   tags:
    - configuration
 
-# - name: Logrotate policies
+# - name: Logging and auditing - Logrotate policies
 #   include_tasks: logrotate.yml
 #   tags:
 #    - configuration
@@ -34,12 +34,7 @@
   tags:
    - configuration
 
-# - name: Hardening policies for sysctl 
-#   include_tasks: sysctl.yml
-#   tags:
-#    - configuration
-
-- name: Network policies
+- name: Network configuration policies
   include_tasks: network_configuration.yml
   tags:
    - configuration
@@ -51,13 +46,5 @@
 
 # - name: Hardening policies for auditd 
 #   include_tasks: auditd.yml
-#   tags:
-#    - configuration
-
-# - name: Hardening policies for time synchronization 
-#   include_tasks: timesync.yml
-#   when: >
-#     'site1_ntp_servers' not in group_names and
-#     'site2_ntp_servers' not in group_names 
 #   tags:
 #    - configuration

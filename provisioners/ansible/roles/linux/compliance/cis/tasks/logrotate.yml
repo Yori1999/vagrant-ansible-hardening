@@ -1,4 +1,10 @@
 ---
+# LOGGING AND AUDITING
+
+# Logrotate configuration
+# This refers to keeping the log files smaller and more manageable by rotating them regularly
+# It will avoid filling the system up with logs or making these logs too large to be manageable
+
 - name: Configure daily log rotation in /etc/logrotate.conf
   lineinfile:
     create: true
@@ -30,6 +36,4 @@
         line: /usr/sbin/logrotate /etc/logrotate.conf
         regexp: ^[\s]*/usr/sbin/logrotate[\s\S]*/etc/logrotate.conf$
   tags: ['configuration']
-
-
 

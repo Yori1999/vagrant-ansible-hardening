@@ -1,4 +1,184 @@
 ---
+# NETWORK PARAMETERS (HOST ONLY)
+
+- name: CIS, 3.2.1 - Ensure packet redirect sending is disabled
+  block:
+    - name: Ensure sysctl net.ipv4.conf.all.send_redirects is set to 0
+      sysctl:
+        name: net.ipv4.conf.all.send_redirects
+        value: '0'
+        state: present
+        reload: true
+    - name: Ensure sysctl net.ipv4.conf.default.send_redirects is set to 0
+      sysctl:
+        name: net.ipv4.conf.default.send_redirects
+        value: '0'
+        state: present
+        reload: true
+  tags: ['configuration']
+
+- name: CIS, 3.2.2 - Ensure IP forwarding is disabled
+  block:
+    - name: Ensure sysctl net.ipv4.ip_forward is set to 0
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: '0'
+        state: present
+        reload: true
+    - name: Ensure sysctl net.ipv6.conf.all.forwarding is set to 0
+      sysctl:
+        name: net.ipv6.conf.all.forwarding
+        value: '0'
+        state: present
+        reload: true
+  tags: ['configuration']
+
+# NETWORK PARAMETERS (HOST AND ROUTER)
+
+- name: CIS, 3.3.1 - Ensure source routed packets are not accepted
+  block:
+    - name: Ensure sysctl net.ipv4.conf.all.accept_source_route is set to 0
+      sysctl:
+        name: net.ipv4.conf.all.accept_source_route
+        value: '0'
+        state: present
+        reload: true
+    - name: Ensure sysctl net.ipv4.conf.default.accept_source_route is set to 0
+      sysctl:
+        name: net.ipv4.conf.default.accept_source_route
+        value: '0'
+        state: present
+        reload: true
+    - name: Ensure sysctl net.ipv6.conf.all.accept_source_route is set to 0
+      sysctl:
+        name: net.ipv6.conf.all.accept_source_route
+        value: '0'
+        state: present
+        reload: true
+    - name: Ensure sysctl net.ipv6.conf.default.accept_source_route is set to 0
+      sysctl:
+        name: net.ipv6.conf.default.accept_source_route
+        value: '0'
+        state: present
+        reload: true
+  tags: ['configuration']
+
+- name: CIS, 3.3.2 - Ensure ICMP redirects are not accepted
+  block:
+    - name: Ensure sysctl net.ipv4.conf.all.accept_redirects is set to 0
+      sysctl:
+        name: net.ipv4.conf.all.accept_redirects
+        value: '0'
+        state: present
+        reload: true
+    - name: Ensure sysctl net.ipv4.conf.default.accept_redirects is set to 0
+      sysctl:
+        name: net.ipv4.conf.default.accept_redirects
+        value: '0'
+        state: present
+        reload: true
+    - name: Ensure sysctl net.ipv6.conf.all.accept_redirects is set to 0
+      sysctl:
+        name: net.ipv6.conf.all.accept_redirects
+        value: '0'
+        state: present
+        reload: true
+    - name: Ensure sysctl net.ipv6.conf.default.accept_redirects is set to 0
+      sysctl:
+        name: net.ipv6.conf.default.accept_redirects
+        value: '0'
+        state: present
+        reload: true
+  tags: ['configuration']
+
+- name: CIS, 3.3.3 - Ensure secure ICMP redirects are not accepted
+  block:
+    - name: Ensure sysctl net.ipv4.conf.all.secure_redirects is set to 0
+      sysctl:
+        name: net.ipv4.conf.all.secure_redirects
+        value: '0'
+        state: present
+        reload: true
+    - name: Ensure sysctl net.ipv4.conf.default.secure_redirects is set to 0
+      sysctl:
+        name: net.ipv4.conf.default.secure_redirects
+        value: '0'
+        state: present
+        reload: true
+  tags: ['configuration']
+
+- name: CIS, 3.3.4 - Ensure suspicious packets are logged
+  block:
+    - name: Ensure sysctl net.ipv4.conf.all.log_martians is set to 1
+      sysctl:
+        name: net.ipv4.conf.all.log_martians
+        value: '1'
+        state: present
+        reload: true
+    - name: Ensure sysctl net.ipv4.conf.default.log_martians is set to 1
+      sysctl:
+        name: net.ipv4.conf.default.log_martians
+        value: '1'
+        state: present
+        reload: true
+  tags: ['configuration']
+
+- name: CIS, 3.3.5 - Ensure broadcast ICMP requests are ignored
+  sysctl:
+    name: net.ipv4.icmp_echo_ignore_broadcasts
+    value: '1'
+    state: present
+    reload: true
+  tags: ['configuration']
+
+- name: CIS, 3.3.6 - Ensure bogus ICMP responses are ignored
+  sysctl:
+    name: net.ipv4.icmp_ignore_bogus_error_responses
+    value: '1'
+    state: present
+    reload: true
+  tags: ['configuration']
+
+- name: CIS, 3.3.7 - Ensure Reverse Path Filtering is enabled
+  block:
+    - name: Ensure sysctl net.ipv4.conf.all.rp_filter is set to 1
+      sysctl:
+        name: net.ipv4.conf.all.rp_filter
+        value: '1'
+        state: present
+        reload: true
+    - name: Ensure sysctl net.ipv4.conf.default.rp_filter is set to 1
+      sysctl:
+        name: net.ipv4.conf.default.rp_filter
+        value: '1'
+        state: present
+        reload: true
+  tags: ['configuration']
+
+- name: CIS, 3.3.8 - Ensure TCP SYN Cookies is enabled
+  sysctl:
+    name: net.ipv4.tcp_syncookies
+    value: '1'
+    state: present
+    reload: true
+  tags: ['configuration']
+
+- name: CIS, 3.3.9 - Ensure IPv6 router advertisements are not accepted
+  block:
+    - name: Ensure sysctl net.ipv6.conf.all.accept_ra is set to 0
+      sysctl:
+        name: net.ipv6.conf.all.accept_ra
+        value: '0'
+        state: present
+        reload: true
+    - name: Ensure sysctl net.ipv6.conf.default.accept_ra is set to 0
+      sysctl:
+        name: net.ipv6.conf.default.accept_ra
+        value: '0'
+        state: present
+        reload: true
+  tags: ['configuration']
+
 # UNCOMMON NETWORK PROTOCOLS
 # This task includes the following CIS recommendations:
 # CIS, 3.4.1 - Ensure DCCP is disabled -> Be careful, as this is has a profile applicability of L2 for both workstations and servers
