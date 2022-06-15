@@ -1,4 +1,6 @@
 ---
+# With the current configuration of services_running, this task complies with the following CIS recommendations:
+
 - name: Make sure services required by CIS standard are running
   systemd:
     name: '{{ item }}'
@@ -9,6 +11,8 @@
     - ansible_facts['os_family']|lower == "debian"
   tags: ['services']
 
+# With the current configuration of services_running, this task complies with the following CIS recommendations:
+# CIS, 2.1.4 - Ensure CUPS is not installed (partially) -> be careful as for workstations this is considered of Level 2. With this task it will only be stopped
 - name: Make sure services not required by CIS standard are stopped
   systemd:
     name: '{{ item }}'

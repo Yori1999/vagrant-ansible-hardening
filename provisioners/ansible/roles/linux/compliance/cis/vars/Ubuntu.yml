@@ -25,18 +25,36 @@ packages_absent:
   - inetutils-telnetd
   - ntpdate
   - chrony
+  - isc-dhcp-server
+  - slapd
+  - nfs-kernel-server
+  - bind9
+  - vsftpd
+  - apache2
+  - dovecot-imapd
+  - dovecot-pop3d
+  - samba
+  - squid
+  - snmpd
+  - rsync
+  - rsh-client
+  - talk
+  - ldap-utils
+  - rpcbind
+  #- xserver-xorg* # only for servers
+  #- cups # to really comply with the CIS recommendation this should be uninstalled. For servers -> L1. For workstations -> L2.
 
 services_running:
   - auditd
   - rsyslog
   - cron
   - ufw
-  #- systemd-timesyncd # service masked
   - sshd
+  #- systemd-timesyncd # service masked
 
 services_stopped:
-  - ntp
-  - cups
+  - ntp # We can instead use systemd-timesyncd
+  - cups # to really comply with the CIS recommendation this should be uninstalled. For servers -> L1. For workstations -> L2.
   - apport.service
 
 scap_guides_version: '0.1.60'
