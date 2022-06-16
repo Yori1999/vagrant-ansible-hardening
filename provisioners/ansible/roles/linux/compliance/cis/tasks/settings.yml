@@ -9,10 +9,10 @@
   tags:
    - configuration
 
-# - name: Logging and auditing - Logrotate policies
-#   include_tasks: logrotate.yml
-#   tags:
-#    - configuration
+- name: Logging and auditing - Logrotate policies
+  include_tasks: logrotate.yml
+  tags:
+   - configuration
 
 - name: Hardening policies for user accounts and environments
   include_tasks: user_accounts.yml 
@@ -44,7 +44,7 @@
   tags:
    - configuration
 
-# - name: Hardening policies for auditd 
-#   include_tasks: auditd.yml
-#   tags:
-#    - configuration
+- name: Hardening policies for audit 
+  include_tasks: audit.yml
+  tags:
+   - configuration

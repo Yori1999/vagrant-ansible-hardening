@@ -1,6 +1,6 @@
 ---
 # With the current configuration of services_running, this task complies with the following CIS recommendations:
-
+# CIS, 4.1.1.2 - Ensure auditd service is enabled
 - name: Make sure services required by CIS standard are running
   systemd:
     name: '{{ item }}'

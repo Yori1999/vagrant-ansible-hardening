@@ -1,4 +1,6 @@
 ---
+# With the current configuration of packages_absent, this task complies with the following CIS recommendations:
+# CIS, 4.1.1.1 - Ensure auditd is installed
 - name: Make sure that software required by CIS standard is present
   apt:
     name: '{{ packages_present }}'
@@ -14,11 +16,9 @@
       package:
         name: systemd-timesyncd
         state: present
-
     - name: Gather the package facts
       package_facts:
         manager: auto
-
     - name: Enable service systemd-timesyncd
       service:
         name: systemd-timesyncd

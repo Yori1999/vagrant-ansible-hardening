@@ -1,6 +1,12 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+$script = <<-SCRIPT
+echo ">>> Updating and upgrading the system <<<"
+sudo apt-get -y update
+sudo apt-get -y full-upgrade
+SCRIPT
+
 Vagrant.configure("2") do |config|
 
   config.vm.define "ubuntu" do |machine|
@@ -15,7 +21,9 @@ Vagrant.configure("2") do |config|
       vb.gui = true
     end
     machine.vm.synced_folder "./ubuntu_shared", "/host_data", mount_options: ["umask=077"]
+    machine.vm.provision "shell", inline: $script 
     machine.vm.provision "shell", path: "provisioning/install_lynis.sh"
+    machine.vm.provision "shell", path: "provisioning/install_auditd.sh"
   end
 
   config.vm.define "controller" do |machine|

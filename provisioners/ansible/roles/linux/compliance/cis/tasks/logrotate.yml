@@ -5,6 +5,9 @@
 # This refers to keeping the log files smaller and more manageable by rotating them regularly
 # It will avoid filling the system up with logs or making these logs too large to be manageable
 
+# These tasks comply with CIS, 4.3 - Ensure logrotate is configured, though you should check these settings
+# to make sure they are adequately configured for your site/organization policy
+
 - name: Configure daily log rotation in /etc/logrotate.conf
   lineinfile:
     create: true
@@ -29,7 +32,6 @@
         line: '#!/bin/sh'
         insertbefore: BOF
         create: true
-
     - name: Add logrotate call
       lineinfile:
         path: /etc/cron.daily/logrotate
