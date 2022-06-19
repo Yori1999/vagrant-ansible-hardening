@@ -29,6 +29,7 @@ Vagrant.configure("2") do |config|
       vb.cpus = CORES
 
       # VM customization via VBoxManage
+      vb.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
       vb.customize ["modifyvm", :id, "--vram", VRAM]
     end
 

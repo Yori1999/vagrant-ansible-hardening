@@ -8,6 +8,9 @@ windows_machine = YAML.load_file('windows_machine.yml')
 
 #ENV['VAGRANT_EXPERIMENTAL'] = 'disks'
 
+# Amount of available virtual memory
+VRAM = windows_machine['vram']
+
 Vagrant.configure("2") do |config|
   Vagrant.require_version ">= 2.1.18"
 
@@ -25,6 +28,10 @@ Vagrant.configure("2") do |config|
       vb.gui = true # Display the VirtualBox GUI when booting the machine
       vb.memory = windows_machine['ram'] # Customize the amount of memory on the VM
       vb.cpus = windows_machine['cores']
+
+      # VM customization via VBoxManage
+      vb.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
+      vb.customize ["modifyvm", :id, "--vram", VRAM]
     end
     
     # Copy some required files

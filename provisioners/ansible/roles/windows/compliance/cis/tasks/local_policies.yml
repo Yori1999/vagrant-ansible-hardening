@@ -41,7 +41,6 @@
 # If a specific user or group of users needs this right as well (for doing specific administrative roles) they will need to be configured
 # In case the organization also needs the Backup Operators accounts to be assigned this user right
 # The most secure option is only 'Administrators', but doesn't allow any other type of local session
-# It also blocks WinRM connections, but not RDP ones
 - name: "CIS,2.2.5,CCE-37659-0 | Ensure 'Allow log on locally' is set to 'Administrators, Users'"
   win_user_right:
      name: SeInteractiveLogonRight
