@@ -6,4 +6,3 @@
   ignore_errors: yes
   roles:
     - compliance/cis
-    #- compliance/scap

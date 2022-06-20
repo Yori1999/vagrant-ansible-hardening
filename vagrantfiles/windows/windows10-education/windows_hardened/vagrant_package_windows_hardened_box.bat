@@ -1,1 +1,1 @@
-vagrant package --output windows_hardened.box
+vagrant package --output windows_hardened.box windows10
