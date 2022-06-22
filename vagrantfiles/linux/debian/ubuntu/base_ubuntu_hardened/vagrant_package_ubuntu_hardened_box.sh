@@ -1,0 +1,1 @@
+vagrant package --output base_ubuntu_hardened.box ubuntu
