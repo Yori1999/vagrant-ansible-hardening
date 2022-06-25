@@ -57,6 +57,7 @@
      #data: "3" # Manual but complies with CLARA's analysis
      type: dword
   tags: ['configuration']
+  
 # L2
 # Beware when enabling this setting, as many remote administration tools, such as System Center Configuration Manager (SCCM), may require the WinRM service to be operational for remote management
 - name: "CIS,5.40 | Ensure 'Windows Remote Management (WS-Management) (WinRM)' is set to 'Disabled'"

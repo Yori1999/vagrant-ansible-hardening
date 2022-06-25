@@ -52,6 +52,7 @@
     - windows_defender_firewall.yml
     - personalization.yml
     - administrative_templates.yml
+    - administrative_templates_user.yml
     - complementary_to_cis.yml
   when: >
     ansible_facts['os_family']|lower == "windows" and

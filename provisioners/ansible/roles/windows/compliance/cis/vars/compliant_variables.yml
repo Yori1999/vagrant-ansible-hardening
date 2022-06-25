@@ -14,11 +14,12 @@ dayspromptchangebeforeexpiration: 5 # days before password expiration when the u
 idletimebeforesuspendingsmbsession: 15 # The maximum value is 99999, which is over 69 days and, in effect, this disables the setting
 firewallloggingsize: "16384"
 
-#not_allow_password_and_credentials_storage_for_network_authentication: True
+unprivileged_shutdown_allowed: False
+not_allow_password_and_credentials_storage_for_network_authentication: True
 enable_forced_logoff: True
 screensaver_enabled: True
 microsoft_store_disabled: True
-show_legal_notice: False
+show_legal_notice: True
 
 # CIS 2.3.9.5 options
 accept_if_provided_by_client: "1"
@@ -34,4 +35,4 @@ restrict_wersvc: False
 restrict_winrm: False
 force_strong_key_protection_user_keys: False
 
-l2_environment: False
+l2_environment: True

@@ -46,7 +46,8 @@
      name: SeInteractiveLogonRight
      users:
      - '{{ group_administrators }}'
-     - '{{ group_auth_users }}'
+     - '{{ group_users }}'
+     #- '{{ group_auth_users }}'
      #- '{{ group_backup_operators }}'
      action: set
   tags: ['configuration']
@@ -137,14 +138,15 @@
      action: set
   tags: ['configuration']
 
-# Limiting hardening to only include the Guests group, because Local Account access will still be needed for standalone workstations
-# If you're configuring a domain-joined workstation, you may need to uncomment the local account variable reference
-- name: "CIS,2.2.16,CCE-37954-5 | Configure 'Deny access to this computer from the network'"
+# Configuring a standalone (non-domain-joined) workstation as recommended may result in an inability to remotely administer the workstation
+# You can limit hardening to only include the Guests group, because Local Account access will still be needed for standalone workstations
+# If you're configuring a domain-joined workstation, you may need to uncomment the local account variable reference, otherwise you can comment it
+- name: "CIS,2.2.16,CCE-37954-5 | Configure 'Deny access to this computer from the network' to include 'Guests, Local Account'"
   win_user_right:
      name: SeDenyNetworkLogonRight
      users:
      - '{{ group_guests }}'
-     #- '{{ group_local_account }}'
+     - '{{ group_local_account }}'
      action: set
   tags: ['configuration']
 
@@ -172,14 +174,15 @@
      action: set
   tags: ['configuration']
 
-# Limiting hardening to only include the Guests group, because Local Account access will still be needed for remotely administering standalone workstations
-# If you're configuring a domain-joined workstation, you may want to uncomment the local account variable reference
-- name: "CIS,2.2.20,CCE-36867-0 | Configure 'Deny log on through Remote Desktop Services' to include 'Guests'"
+# Configuring a standalone (non-domain-joined) workstation as recommended may result in an inability to remotely administer the workstation
+# You can limit hardening to only include the Guests group, because Local Account access will still be needed for remotely administering standalone workstations
+# If you're configuring a domain-joined workstation, you may want to uncomment the local account variable reference, otherwise you can comment this option
+- name: "CIS,2.2.20,CCE-36867-0 | Configure 'Deny log on through Remote Desktop Services' to include 'Guests, Local Account'"
   win_user_right:
      name: SeDenyRemoteInteractiveLogonRight
      users:
      - '{{ group_guests }}'
-     #- '{{ group_local_account }}'
+     - '{{ group_local_account }}'
      action: set
   tags: ['configuration']
 

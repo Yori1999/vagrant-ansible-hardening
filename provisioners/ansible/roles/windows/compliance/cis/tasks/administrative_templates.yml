@@ -406,11 +406,51 @@
 # This is an L2 policy (High Security/Sensitive Data Environment (limited functionality))
 # This control will have to be set to Enabled (1) to allow for continued remote management via Ansible following machine restart
 # Otherwise, the recommended value for this setting is 'Disabled'
-- name: "18.9.103.1,CCE-36499-2 | Ensure 'Allow Remote Shell Access' is set to 'Disabled'"
+- name: "CIS,18.9.103.1,CCE-36499-2 | Ensure 'Allow Remote Shell Access' is set to 'Disabled'"
   win_regedit:
      path: HKLM:\Software\Policies\Microsoft\Windows\Winrm\Service\Winrs
      name: "AllowRemoteShellAccess"
      #data: "0"
      data: "1"
+     type: dword
+  tags: ['configuration']
+
+# Manage end user experience
+# As cited in the CIS Microsoft Windows 10 Enterprise Benchmark, "Organizations that utilize a 3rd-party solution for patching may choose to exempt themselves from this recommendation, and instead configure it to Disabled so that the native Windows Update mechanism does not interfere with the 3rd-party patching process"
+# The default value for the suboption of this setting is '3 - Auto download and notify for install'
+# CIS recommends to set this to '4 - Auto download and schedule the install' if feasible, which may require additional schedule settings
+- name: "CIS,18.9.108.2.1 | Ensure 'Configure Automatic Updates' is set to 'Enabled'"
+  block:
+    - name: Allow automatic updates
+      win_regedit:
+        path: HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate\AU
+        name: "NoAutoUpdate"
+        data: "0" # 0 - Enabled
+        type: dword
+    - name: Set automatic update option
+      win_regedit:
+        path: HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate\AU
+        name: "AUOptions"
+        data: "3" # 3 - Auto download and notify for install - The default option
+        # data: "4" # 4 - Auto download and schedule the install - Enable this if your organization agrees, as this is the option CIS encourages if feasible
+        type: dword
+  tags: ['configuration']
+
+# This setting is only applicable if 4 - Auto download and schedule the install is selected in recommendation 'Configure Automatic Updates'. It will have no impact if any other option is selected
+- name: "CIS,18.9.108.2.2 | Ensure 'Configure Automatic Updates: Scheduled install day' is set to '0 - Every day'"
+  win_regedit:
+     path: HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate\AU
+     name: "ScheduledInstallDay"
+     data: "0" # 0 - Every day
+     type: dword
+  tags: ['configuration']
+
+# System administrators should control when updates are applied to systems, so normal users will not be able to select the "Pause updates" option in Windows Update to prevent updates from being installed on a system
+# By default, though, it is set to 'Disabled', so users have access to the "Pause updates" feature
+- name: "CIS,18.9.108.2.3 | Ensure 'Remove access to “Pause updates” feature' is set to 'Enabled'"
+  win_regedit:
+     path: HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate
+     name: "SetDisablePauseUXAccess"
+     data: "1" # Enabled
      type: dword
   tags: ['configuration']

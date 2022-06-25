@@ -38,6 +38,14 @@
      value: "1" # Enabled 
   tags: ['configuration']
 
+- name: "CIS,1.1.6 | Ensure 'Relax minimum password length limits' is set to 'Enabled'"
+  win_regedit:
+     path: HKLM:\System\CurrentControlSet\Control\SAM
+     name: "RelaxMinimumPasswordLengthLimits"
+     data: "1" # Enabled
+     type: dword
+  tags: ['configuration']
+
 - name: "CIS,1.1.7,CCE-36286-3 | Ensure 'Store passwords using reversible encryption' is set to 'Disabled'"
   win_security_policy:
      section: System Access
