@@ -35,4 +35,4 @@ restrict_wersvc: False
 restrict_winrm: False
 force_strong_key_protection_user_keys: False
 
-l2_environment: True
+l2_environment: False

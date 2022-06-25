@@ -1,0 +1,1 @@
+The reports found in this folder correspond to when the system gets provisioned with both Level 1 and Level 2 security policies. Audit analysis for checking what compliance score against CLARA's standards for categories low, medium and high this machine gets have been performed

@@ -1,0 +1,739 @@
+Bringing machine 'windows10' up with 'virtualbox' provider...
+Bringing machine 'controller' up with 'virtualbox' provider...
+==> windows10: Importing base box 'win-10'...
+[KProgress: 10%[KProgress: 20%[KProgress: 70%[KProgress: 80%[KProgress: 90%[K==> windows10: Matching MAC address for NAT networking...
+==> windows10: Setting the name of the VM: windows10
+==> windows10: Clearing any previously set network interfaces...
+==> windows10: Preparing network interfaces based on configuration...
+    windows10: Adapter 1: nat
+    windows10: Adapter 2: hostonly
+==> windows10: Forwarding ports...
+    windows10: 3389 (guest) => 3389 (host) (adapter 1)
+    windows10: 22 (guest) => 2222 (host) (adapter 1)
+    windows10: 5985 (guest) => 55985 (host) (adapter 1)
+    windows10: 5986 (guest) => 55986 (host) (adapter 1)
+==> windows10: Running 'pre-boot' VM customizations...
+==> windows10: Booting VM...
+==> windows10: Waiting for machine to boot. This may take a few minutes...
+    windows10: WinRM address: 127.0.0.1:55985
+    windows10: WinRM username: vagrant
+    windows10: WinRM execution_time_limit: PT2H
+    windows10: WinRM transport: negotiate
+==> windows10: Machine booted and ready!
+==> windows10: Checking for guest additions in VM...
+    windows10: The guest additions on this VM do not match the installed version of
+    windows10: VirtualBox! In most cases this is fine, but in rare cases it can
+    windows10: prevent things such as shared folders from working properly. If you see
+    windows10: shared folder errors, please make sure the guest additions within the
+    windows10: virtual machine match the version of VirtualBox you have installed on
+    windows10: your host and reload your VM.
+    windows10: 
+    windows10: Guest Additions Version: 6.0.16
+    windows10: VirtualBox Version: 6.1
+==> windows10: Configuring and enabling network interfaces...
+==> windows10: Mounting shared folders...
+    windows10: /vagrant => C:/Users/maria/Desktop/TFG/REPO/step-by-step-2/vagrant-ansible-hardening/vagrantfiles/windows/windows10-education/windows_hardened
+    windows10: /host_data => C:/Users/maria/Desktop/TFG/REPO/step-by-step-2/vagrant-ansible-hardening/vagrantfiles/windows/windows10-education/windows_hardened/windows_shared
+==> windows10: Running provisioner: file...
+    windows10: ../../../../files/CLARA => CLARA
+==> windows10: Running provisioner: file...
+    windows10: ./insecure_private_key => /vagrant/.vagrant/machines/windows10/virtualbox/insecure_private_key
+==> controller: Importing base box 'ubuntu/trusty64'...
+[K==> controller: Matching MAC address for NAT networking...
+==> controller: Checking if box 'ubuntu/trusty64' version '20190514.0.0' is up to date...
+==> controller: Setting the name of the VM: windows_hardened_controller_1656182624040_82531
+==> controller: Clearing any previously set forwarded ports...
+==> controller: Fixed port collision for 22 => 2222. Now on port 2200.
+==> controller: Clearing any previously set network interfaces...
+==> controller: Preparing network interfaces based on configuration...
+    controller: Adapter 1: nat
+    controller: Adapter 2: hostonly
+==> controller: Forwarding ports...
+    controller: 22 (guest) => 2200 (host) (adapter 1)
+==> controller: Booting VM...
+==> controller: Waiting for machine to boot. This may take a few minutes...
+    controller: SSH address: 127.0.0.1:2200
+    controller: SSH username: vagrant
+    controller: SSH auth method: private key
+    controller: Warning: Connection reset. Retrying...
+    controller: Warning: Connection aborted. Retrying...
+    controller: 
+    controller: Vagrant insecure key detected. Vagrant will automatically replace
+    controller: this with a newly generated keypair for better security.
+    controller: 
+    controller: Inserting generated public key within guest...
+    controller: Removing insecure key from the guest if it's present...
+    controller: Key inserted! Disconnecting and reconnecting using new SSH key...
+==> controller: Machine booted and ready!
+==> controller: Checking for guest additions in VM...
+    controller: The guest additions on this VM do not match the installed version of
+    controller: VirtualBox! In most cases this is fine, but in rare cases it can
+    controller: prevent things such as shared folders from working properly. If you see
+    controller: shared folder errors, please make sure the guest additions within the
+    controller: virtual machine match the version of VirtualBox you have installed on
+    controller: your host and reload your VM.
+    controller: 
+    controller: Guest Additions Version: 4.3.40
+    controller: VirtualBox Version: 6.1
+==> controller: Configuring and enabling network interfaces...
+==> controller: Mounting shared folders...
+    controller: /vagrant => C:/Users/maria/Desktop/TFG/REPO/step-by-step-2/vagrant-ansible-hardening/vagrantfiles/windows/windows10-education/windows_hardened
+==> controller: Detected mount owner ID within mount options. (uid: 1000 guestpath: /vagrant)
+==> controller: Detected mount group ID within mount options. (gid: 1000 guestpath: /vagrant)
+==> controller: Running provisioner: file...
+    controller: ../../../../provisioners/ansible/roles/windows => /vagrant/provisioning/roles/windows
+==> controller: Running provisioner: ansible_local...
+    controller: Installing Ansible...
+    controller: Running ansible-playbook...
+cd /vagrant && PYTHONUNBUFFERED=1 ANSIBLE_NOCOLOR=true ANSIBLE_CONFIG='provisioning/ansible.cfg' ansible-playbook --limit="windows" --inventory-file=provisioning/inventory -v provisioning/roles/windows/windows_provisioning.yml
+Using /vagrant/provisioning/ansible.cfg as config file
+
+PLAY [Provisioning roles for Windows workstations and servers] *****************
+
+TASK [Gathering Facts] *********************************************************
+ok: [windows10]
+
+TASK [compliance/cis : Determine Language settings] ****************************
+changed: [windows10] => {"changed": true, "cmd": "Get-WinSystemLocale | select name", "delta": "0:00:01.047071", "end": "2022-06-25 06:46:36.949376", "rc": 0, "start": "2022-06-25 06:46:35.902304", "stderr": "", "stderr_lines": [], "stdout": "\r\nName \r\n---- \r\nen-US\r\n\r\n\r\n", "stdout_lines": ["", "Name ", "---- ", "en-US", "", ""]}
+
+TASK [compliance/cis : Include variables for OS version (ES)] ******************
+skipping: [windows10] => (item=/vagrant/provisioning/roles/windows/compliance/cis/vars/Windows_es.yml)  => {"ansible_loop_var": "item", "changed": false, "item": "/vagrant/provisioning/roles/windows/compliance/cis/vars/Windows_es.yml", "skip_reason": "Conditional result was False"}
+
+TASK [compliance/cis : Include variables for OS version (EN)] ******************
+ok: [windows10] => (item=/vagrant/provisioning/roles/windows/compliance/cis/vars/Windows_en.yml) => {"ansible_facts": {"audit_type_failure": "failure", "audit_type_success": "success", "group_administrators": "Administrators", "group_auth_users": "Authenticated Users", "group_backup_operators": "Backup Operators", "group_guests": "Guests", "group_iis_users": "IIS_IUSRS", "group_local_account": "Local Account", "group_local_service": "Local Service", "group_network_service": "Network Service", "group_remote_desktop": "Remote Desktop Users", "group_service": "Service", "group_users": "Users", "group_window_manager": "Window Manager\\Window Manager Group", "legal_notice_caption": "Security warning", "legal_notice_text": "This is an <CHANGEME> computer system. It may be accessed by authorized users for professional use only. Use of this system implies acceptance of corporate use policies. This system is subject to monitoring.", "subcategory_account_lockout": "Account Lockout", "subcategory_application_group_management": "Application Group Management", "subcategory_audit_policy_change": "Audit Policy Change", "subcategory_authentication_policy_change": "Authentication Policy Change", "subcategory_authorization_policy_change": "Authorization Policy Change", "subcategory_computer_account_management": "Computer Account Management", "subcategory_credential_validation": "Credential validation", "subcategory_distribution_group_management": "Distribution Group Management", "subcategory_group_membership": "Group Membership", "subcategory_ipsec_driver": "IPsec Driver", "subcategory_logoff": "Logoff", "subcategory_logon": "Logon", "subcategory_other_account_management": "Other Account Management Events", "subcategory_other_logon_logoff_events": "Other Logon/Logoff Events", "subcategory_other_system_events": "Other System Events", "subcategory_plug_and_play_events": "Plug and Play Events", "subcategory_process_creation": "Process Creation", "subcategory_removable_storage": "Removable Storage", "subcategory_security_group_management": "Security Group Management", "subcategory_security_state_change": "Security State Change", "subcategory_security_system_extension": "Security System Extension", "subcategory_sensitive_privilege_use": "Sensitive Privilege Use", "subcategory_special_logon": "Special Logon", "subcategory_system_integrity": "System Integrity", "subcategory_user_account_management": "User Account Management"}, "ansible_included_var_files": ["/vagrant/provisioning/roles/windows/compliance/cis/vars/Windows_en.yml"], "ansible_loop_var": "item", "changed": false, "item": "/vagrant/provisioning/roles/windows/compliance/cis/vars/Windows_en.yml"}
+
+TASK [compliance/cis : Include particular variables for the inventory group] ***
+ok: [windows10] => (item=/vagrant/provisioning/roles/windows/compliance/cis/vars/compliant_variables.yml) => {"ansible_facts": {"accept_if_provided_by_client": "1", "adminaccountnewname": "Administrator", "dayspromptchangebeforeexpiration": 5, "enable_forced_logoff": true, "firewallloggingsize": "16384", "force_strong_key_protection_user_keys": false, "guestaccountnewname": "Guest", "idletimebeforesuspendingsmbsession": 15, "l2_environment": true, "lockoutbadcount": 5, "lockoutduration": 1800, "machineinactivitylimit": 600, "maximummachineaccountpasswordage": 30, "maximumpasswordage": 30, "microsoft_store_disabled": true, "minimumpasswordage": 2, "minimumpasswordlength": 14, "not_allow_password_and_credentials_storage_for_network_authentication": true, "passwordhistorysize": 24, "prompt_for_consent": "4", "prompt_for_consent_secure_desktop": "2", "prompt_for_credentials_secure_desktop": "1", "required_from_client": "2", "resetlockoutcount": 1800, "restrict_maps_broker": false, "restrict_wersvc": false, "restrict_winrm": false, "screensaver_enabled": true, "show_legal_notice": true, "unprivileged_shutdown_allowed": false}, "ansible_included_var_files": ["/vagrant/provisioning/roles/windows/compliance/cis/vars/compliant_variables.yml"], "ansible_loop_var": "item", "changed": false, "item": "/vagrant/provisioning/roles/windows/compliance/cis/vars/compliant_variables.yml"}
+
+TASK [compliance/cis : Center for Internet Security policies (CIS compliant) for Windows Education workstations] ***
+included: /vagrant/provisioning/roles/windows/compliance/cis/tasks/access_checks.yml for windows10
+included: /vagrant/provisioning/roles/windows/compliance/cis/tasks/account_policies.yml for windows10
+included: /vagrant/provisioning/roles/windows/compliance/cis/tasks/local_policies.yml for windows10
+included: /vagrant/provisioning/roles/windows/compliance/cis/tasks/system_services.yml for windows10
+included: /vagrant/provisioning/roles/windows/compliance/cis/tasks/windows_defender_firewall.yml for windows10
+included: /vagrant/provisioning/roles/windows/compliance/cis/tasks/personalization.yml for windows10
+included: /vagrant/provisioning/roles/windows/compliance/cis/tasks/administrative_templates.yml for windows10
+included: /vagrant/provisioning/roles/windows/compliance/cis/tasks/administrative_templates_user.yml for windows10
+included: /vagrant/provisioning/roles/windows/compliance/cis/tasks/complementary_to_cis.yml for windows10
+
+TASK [compliance/cis : Verify the Windows folder permissions are properly set | windows-base-100] ***
+ok: [windows10] => {"changed": false}
+
+TASK [compliance/cis : CIS,1.1.1,CCE-37166-6 | Ensure 'Enforce password history' is set to '24 or more password(s)'] ***
+changed: [windows10] => {"changed": true, "import_log": "Completed 1 percent (0/63) \tProcess Privilege Rights area        \n\nCompleted 3 percent (1/63) \tProcess Privilege Rights area        \n\nCompleted 4 percent (2/63) \tProcess Privilege Rights area        \n\nCompleted 6 percent (3/63) \tProcess Privilege Rights area        \n\nCompleted 7 percent (4/63) \tProcess Privilege Rights area        \n\nCompleted 9 percent (5/63) \tProcess Privilege Rights area        \n\nCompleted 11 percent (6/63) \tProcess Privilege Rights area        \n\nCompleted 12 percent (7/63) \tProcess Privilege Rights area        \n\nCompleted 14 percent (8/63) \tProcess Privilege Rights area        \n\nCompleted 15 percent (9/63) \tProcess Privilege Rights area        \n\nCompleted 17 percent (10/63) \tProcess Privilege Rights area        \n\nCompleted 19 percent (11/63) \tProcess Privilege Rights area        \n\nCompleted 20 percent (12/63) \tProcess Privilege Rights area        \n\nCompleted 22 percent (13/63) \tProcess Privilege Rights area        \n\nCompleted 23 percent (14/63) \tProcess Privilege Rights area        \n\nCompleted 25 percent (15/63) \tProcess Privilege Rights area        \n\nCompleted 25 percent (15/63) \tProcess Group Membership area        \n\nCompleted 49 percent (30/63) \tProcess Group Membership area        \n\nCompleted 49 percent (30/63) \tProcess Registry Keys area        \n\nCompleted 49 percent (30/63) \tProcess File Security area        \n\nCompleted 49 percent (30/63) \tProcess Services area        \n\nCompleted 65 percent (40/63) \tProcess Services area        \n\nCompleted 73 percent (45/63) \tProcess Services area        \n\nCompleted 73 percent (45/63) \tProcess Security Policy area        \n\nCompleted 77 percent (48/63) \tProcess Security Policy area        \n\nCompleted 84 percent (52/63) \tProcess Security Policy area        \n\nCompleted 88 percent (55/63) \tProcess Security Policy area        \n\nCompleted 93 percent (58/63) \tProcess Security Policy area        \n\nCompleted 100 percent (63/63) \tProcess Security Policy area        \n\n                                                                           \nThe task has completed successfully.", "key": "PasswordHistorySize", "section": "System Access", "value": 24}
+
+TASK [compliance/cis : CIS,1.1.2,CCE-37167-4 | Ensure 'Maximum password age' is set to '365 or fewer days, but not 0'] ***
+changed: [windows10] => {"changed": true, "import_log": "Completed 1 percent (0/63) \tProcess Privilege Rights area        \n\nCompleted 3 percent (1/63) \tProcess Privilege Rights area        \n\nCompleted 4 percent (2/63) \tProcess Privilege Rights area        \n\nCompleted 6 percent (3/63) \tProcess Privilege Rights area        \n\nCompleted 7 percent (4/63) \tProcess Privilege Rights area        \n\nCompleted 9 percent (5/63) \tProcess Privilege Rights area        \n\nCompleted 11 percent (6/63) \tProcess Privilege Rights area        \n\nCompleted 12 percent (7/63) \tProcess Privilege Rights area        \n\nCompleted 14 percent (8/63) \tProcess Privilege Rights area        \n\nCompleted 15 percent (9/63) \tProcess Privilege Rights area        \n\nCompleted 17 percent (10/63) \tProcess Privilege Rights area        \n\nCompleted 19 percent (11/63) \tProcess Privilege Rights area        \n\nCompleted 20 percent (12/63) \tProcess Privilege Rights area        \n\nCompleted 22 percent (13/63) \tProcess Privilege Rights area        \n\nCompleted 23 percent (14/63) \tProcess Privilege Rights area        \n\nCompleted 25 percent (15/63) \tProcess Privilege Rights area        \n\nCompleted 25 percent (15/63) \tProcess Group Membership area        \n\nCompleted 49 percent (30/63) \tProcess Group Membership area        \n\nCompleted 49 percent (30/63) \tProcess Registry Keys area        \n\nCompleted 49 percent (30/63) \tProcess File Security area        \n\nCompleted 49 percent (30/63) \tProcess Services area        \n\nCompleted 65 percent (40/63) \tProcess Services area        \n\nCompleted 73 percent (45/63) \tProcess Services area        \n\nCompleted 73 percent (45/63) \tProcess Security Policy area        \n\nCompleted 77 percent (48/63) \tProcess Security Policy area        \n\nCompleted 84 percent (52/63) \tProcess Security Policy area        \n\nCompleted 88 percent (55/63) \tProcess Security Policy area        \n\nCompleted 93 percent (58/63) \tProcess Security Policy area        \n\nCompleted 100 percent (63/63) \tProcess Security Policy area        \n\n                                                                           \nThe task has completed successfully.", "key": "MaximumPasswordAge", "section": "System Access", "value": 30}
+
+TASK [compliance/cis : CIS,1.1.3,CCE-37073-4 | Ensure 'Minimum password age' is set to '1 or more day(s)'] ***
+changed: [windows10] => {"changed": true, "import_log": "Completed 1 percent (0/63) \tProcess Privilege Rights area        \n\nCompleted 3 percent (1/63) \tProcess Privilege Rights area        \n\nCompleted 4 percent (2/63) \tProcess Privilege Rights area        \n\nCompleted 6 percent (3/63) \tProcess Privilege Rights area        \n\nCompleted 7 percent (4/63) \tProcess Privilege Rights area        \n\nCompleted 9 percent (5/63) \tProcess Privilege Rights area        \n\nCompleted 11 percent (6/63) \tProcess Privilege Rights area        \n\nCompleted 12 percent (7/63) \tProcess Privilege Rights area        \n\nCompleted 14 percent (8/63) \tProcess Privilege Rights area        \n\nCompleted 15 percent (9/63) \tProcess Privilege Rights area        \n\nCompleted 17 percent (10/63) \tProcess Privilege Rights area        \n\nCompleted 19 percent (11/63) \tProcess Privilege Rights area        \n\nCompleted 20 percent (12/63) \tProcess Privilege Rights area        \n\nCompleted 22 percent (13/63) \tProcess Privilege Rights area        \n\nCompleted 23 percent (14/63) \tProcess Privilege Rights area        \n\nCompleted 25 percent (15/63) \tProcess Privilege Rights area        \n\nCompleted 25 percent (15/63) \tProcess Group Membership area        \n\nCompleted 49 percent (30/63) \tProcess Group Membership area        \n\nCompleted 49 percent (30/63) \tProcess Registry Keys area        \n\nCompleted 49 percent (30/63) \tProcess File Security area        \n\nCompleted 49 percent (30/63) \tProcess Services area        \n\nCompleted 65 percent (40/63) \tProcess Services area        \n\nCompleted 73 percent (45/63) \tProcess Services area        \n\nCompleted 73 percent (45/63) \tProcess Security Policy area        \n\nCompleted 77 percent (48/63) \tProcess Security Policy area        \n\nCompleted 84 percent (52/63) \tProcess Security Policy area        \n\nCompleted 88 percent (55/63) \tProcess Security Policy area        \n\nCompleted 93 percent (58/63) \tProcess Security Policy area        \n\nCompleted 100 percent (63/63) \tProcess Security Policy area        \n\n                                                                           \nThe task has completed successfully.", "key": "MinimumPasswordAge", "section": "System Access", "value": 2}
+
+TASK [compliance/cis : CIS,1.1.4,CCE-36534-6 | Ensure 'Minimum password length' is set to '14 or more character(s)'] ***
+changed: [windows10] => {"changed": true, "import_log": "Completed 1 percent (0/63) \tProcess Privilege Rights area        \n\nCompleted 3 percent (1/63) \tProcess Privilege Rights area        \n\nCompleted 4 percent (2/63) \tProcess Privilege Rights area        \n\nCompleted 6 percent (3/63) \tProcess Privilege Rights area        \n\nCompleted 7 percent (4/63) \tProcess Privilege Rights area        \n\nCompleted 9 percent (5/63) \tProcess Privilege Rights area        \n\nCompleted 11 percent (6/63) \tProcess Privilege Rights area        \n\nCompleted 12 percent (7/63) \tProcess Privilege Rights area        \n\nCompleted 14 percent (8/63) \tProcess Privilege Rights area        \n\nCompleted 15 percent (9/63) \tProcess Privilege Rights area        \n\nCompleted 17 percent (10/63) \tProcess Privilege Rights area        \n\nCompleted 19 percent (11/63) \tProcess Privilege Rights area        \n\nCompleted 20 percent (12/63) \tProcess Privilege Rights area        \n\nCompleted 22 percent (13/63) \tProcess Privilege Rights area        \n\nCompleted 23 percent (14/63) \tProcess Privilege Rights area        \n\nCompleted 25 percent (15/63) \tProcess Privilege Rights area        \n\nCompleted 25 percent (15/63) \tProcess Group Membership area        \n\nCompleted 49 percent (30/63) \tProcess Group Membership area        \n\nCompleted 49 percent (30/63) \tProcess Registry Keys area        \n\nCompleted 49 percent (30/63) \tProcess File Security area        \n\nCompleted 49 percent (30/63) \tProcess Services area        \n\nCompleted 65 percent (40/63) \tProcess Services area        \n\nCompleted 73 percent (45/63) \tProcess Services area        \n\nCompleted 73 percent (45/63) \tProcess Security Policy area        \n\nCompleted 77 percent (48/63) \tProcess Security Policy area        \n\nCompleted 84 percent (52/63) \tProcess Security Policy area        \n\nCompleted 88 percent (55/63) \tProcess Security Policy area        \n\nCompleted 93 percent (58/63) \tProcess Security Policy area        \n\nCompleted 100 percent (63/63) \tProcess Security Policy area        \n\n                                                                           \nThe task has completed successfully.", "key": "MinimumPasswordLength", "section": "System Access", "value": 14}
+
+TASK [compliance/cis : CIS,1.1.5,CCE-37063-5 | Ensure 'Password must meet complexity requirements' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "import_log": "Completed 1 percent (0/63) \tProcess Privilege Rights area        \n\nCompleted 3 percent (1/63) \tProcess Privilege Rights area        \n\nCompleted 4 percent (2/63) \tProcess Privilege Rights area        \n\nCompleted 6 percent (3/63) \tProcess Privilege Rights area        \n\nCompleted 7 percent (4/63) \tProcess Privilege Rights area        \n\nCompleted 9 percent (5/63) \tProcess Privilege Rights area        \n\nCompleted 11 percent (6/63) \tProcess Privilege Rights area        \n\nCompleted 12 percent (7/63) \tProcess Privilege Rights area        \n\nCompleted 14 percent (8/63) \tProcess Privilege Rights area        \n\nCompleted 15 percent (9/63) \tProcess Privilege Rights area        \n\nCompleted 17 percent (10/63) \tProcess Privilege Rights area        \n\nCompleted 19 percent (11/63) \tProcess Privilege Rights area        \n\nCompleted 20 percent (12/63) \tProcess Privilege Rights area        \n\nCompleted 22 percent (13/63) \tProcess Privilege Rights area        \n\nCompleted 23 percent (14/63) \tProcess Privilege Rights area        \n\nCompleted 25 percent (15/63) \tProcess Privilege Rights area        \n\nCompleted 25 percent (15/63) \tProcess Group Membership area        \n\nCompleted 49 percent (30/63) \tProcess Group Membership area        \n\nCompleted 49 percent (30/63) \tProcess Registry Keys area        \n\nCompleted 49 percent (30/63) \tProcess File Security area        \n\nCompleted 49 percent (30/63) \tProcess Services area        \n\nCompleted 65 percent (40/63) \tProcess Services area        \n\nCompleted 73 percent (45/63) \tProcess Services area        \n\nCompleted 73 percent (45/63) \tProcess Security Policy area        \n\nCompleted 77 percent (48/63) \tProcess Security Policy area        \n\nCompleted 84 percent (52/63) \tProcess Security Policy area        \n\nCompleted 88 percent (55/63) \tProcess Security Policy area        \n\nCompleted 93 percent (58/63) \tProcess Security Policy area        \n\nCompleted 100 percent (63/63) \tProcess Security Policy area        \n\n                                                                           \nThe task has completed successfully.", "key": "PasswordComplexity", "section": "System Access", "value": "1"}
+
+TASK [compliance/cis : CIS,1.1.6 | Ensure 'Relax minimum password length limits' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,1.1.7,CCE-36286-3 | Ensure 'Store passwords using reversible encryption' is set to 'Disabled'] ***
+ok: [windows10] => {"changed": false, "key": "ClearTextPassword", "section": "System Access", "value": "0"}
+
+TASK [compliance/cis : CIS,1.2.2,CCE-36008-1 | Ensure 'Account lockout threshold' is set to '5 or fewer invalid logon attempt(s), but not 0'] ***
+changed: [windows10] => {"changed": true, "import_log": "Completed 1 percent (0/63) \tProcess Privilege Rights area        \n\nCompleted 3 percent (1/63) \tProcess Privilege Rights area        \n\nCompleted 4 percent (2/63) \tProcess Privilege Rights area        \n\nCompleted 6 percent (3/63) \tProcess Privilege Rights area        \n\nCompleted 7 percent (4/63) \tProcess Privilege Rights area        \n\nCompleted 9 percent (5/63) \tProcess Privilege Rights area        \n\nCompleted 11 percent (6/63) \tProcess Privilege Rights area        \n\nCompleted 12 percent (7/63) \tProcess Privilege Rights area        \n\nCompleted 14 percent (8/63) \tProcess Privilege Rights area        \n\nCompleted 15 percent (9/63) \tProcess Privilege Rights area        \n\nCompleted 17 percent (10/63) \tProcess Privilege Rights area        \n\nCompleted 19 percent (11/63) \tProcess Privilege Rights area        \n\nCompleted 20 percent (12/63) \tProcess Privilege Rights area        \n\nCompleted 22 percent (13/63) \tProcess Privilege Rights area        \n\nCompleted 23 percent (14/63) \tProcess Privilege Rights area        \n\nCompleted 25 percent (15/63) \tProcess Privilege Rights area        \n\nCompleted 25 percent (15/63) \tProcess Group Membership area        \n\nCompleted 49 percent (30/63) \tProcess Group Membership area        \n\nCompleted 49 percent (30/63) \tProcess Registry Keys area        \n\nCompleted 49 percent (30/63) \tProcess File Security area        \n\nCompleted 49 percent (30/63) \tProcess Services area        \n\nCompleted 65 percent (40/63) \tProcess Services area        \n\nCompleted 73 percent (45/63) \tProcess Services area        \n\nCompleted 73 percent (45/63) \tProcess Security Policy area        \n\nCompleted 77 percent (48/63) \tProcess Security Policy area        \n\nCompleted 84 percent (52/63) \tProcess Security Policy area        \n\nCompleted 88 percent (55/63) \tProcess Security Policy area        \n\nCompleted 93 percent (58/63) \tProcess Security Policy area        \n\nCompleted 100 percent (63/63) \tProcess Security Policy area        \n\n                                                                           \nThe task has completed successfully.", "key": "LockoutBadCount", "section": "System Access", "value": 5}
+
+TASK [compliance/cis : CIS,1.2.1,CCE-37034-6 | Ensure 'Account lockout duration' is set to '15 or more minute(s)'] ***
+changed: [windows10] => {"changed": true, "import_log": "Completed 1 percent (0/63) \tProcess Privilege Rights area        \n\nCompleted 3 percent (1/63) \tProcess Privilege Rights area        \n\nCompleted 4 percent (2/63) \tProcess Privilege Rights area        \n\nCompleted 6 percent (3/63) \tProcess Privilege Rights area        \n\nCompleted 7 percent (4/63) \tProcess Privilege Rights area        \n\nCompleted 9 percent (5/63) \tProcess Privilege Rights area        \n\nCompleted 11 percent (6/63) \tProcess Privilege Rights area        \n\nCompleted 12 percent (7/63) \tProcess Privilege Rights area        \n\nCompleted 14 percent (8/63) \tProcess Privilege Rights area        \n\nCompleted 15 percent (9/63) \tProcess Privilege Rights area        \n\nCompleted 17 percent (10/63) \tProcess Privilege Rights area        \n\nCompleted 19 percent (11/63) \tProcess Privilege Rights area        \n\nCompleted 20 percent (12/63) \tProcess Privilege Rights area        \n\nCompleted 22 percent (13/63) \tProcess Privilege Rights area        \n\nCompleted 23 percent (14/63) \tProcess Privilege Rights area        \n\nCompleted 25 percent (15/63) \tProcess Privilege Rights area        \n\nCompleted 25 percent (15/63) \tProcess Group Membership area        \n\nCompleted 49 percent (30/63) \tProcess Group Membership area        \n\nCompleted 49 percent (30/63) \tProcess Registry Keys area        \n\nCompleted 49 percent (30/63) \tProcess File Security area        \n\nCompleted 49 percent (30/63) \tProcess Services area        \n\nCompleted 65 percent (40/63) \tProcess Services area        \n\nCompleted 73 percent (45/63) \tProcess Services area        \n\nCompleted 73 percent (45/63) \tProcess Security Policy area        \n\nCompleted 77 percent (48/63) \tProcess Security Policy area        \n\nCompleted 84 percent (52/63) \tProcess Security Policy area        \n\nCompleted 88 percent (55/63) \tProcess Security Policy area        \n\nCompleted 93 percent (58/63) \tProcess Security Policy area        \n\nCompleted 100 percent (63/63) \tProcess Security Policy area        \n\n                                                                           \nThe task has completed successfully.", "key": "LockoutDuration", "section": "System Access", "value": 1800}
+
+TASK [compliance/cis : CIS,1.2.3,CCE-36883-7 | Ensure 'Reset account lockout counter after' is set to '15 or more minute(s)'] ***
+changed: [windows10] => {"changed": true, "import_log": "Completed 1 percent (0/63) \tProcess Privilege Rights area        \n\nCompleted 3 percent (1/63) \tProcess Privilege Rights area        \n\nCompleted 4 percent (2/63) \tProcess Privilege Rights area        \n\nCompleted 6 percent (3/63) \tProcess Privilege Rights area        \n\nCompleted 7 percent (4/63) \tProcess Privilege Rights area        \n\nCompleted 9 percent (5/63) \tProcess Privilege Rights area        \n\nCompleted 11 percent (6/63) \tProcess Privilege Rights area        \n\nCompleted 12 percent (7/63) \tProcess Privilege Rights area        \n\nCompleted 14 percent (8/63) \tProcess Privilege Rights area        \n\nCompleted 15 percent (9/63) \tProcess Privilege Rights area        \n\nCompleted 17 percent (10/63) \tProcess Privilege Rights area        \n\nCompleted 19 percent (11/63) \tProcess Privilege Rights area        \n\nCompleted 20 percent (12/63) \tProcess Privilege Rights area        \n\nCompleted 22 percent (13/63) \tProcess Privilege Rights area        \n\nCompleted 23 percent (14/63) \tProcess Privilege Rights area        \n\nCompleted 25 percent (15/63) \tProcess Privilege Rights area        \n\nCompleted 25 percent (15/63) \tProcess Group Membership area        \n\nCompleted 49 percent (30/63) \tProcess Group Membership area        \n\nCompleted 49 percent (30/63) \tProcess Registry Keys area        \n\nCompleted 49 percent (30/63) \tProcess File Security area        \n\nCompleted 49 percent (30/63) \tProcess Services area        \n\nCompleted 65 percent (40/63) \tProcess Services area        \n\nCompleted 73 percent (45/63) \tProcess Services area        \n\nCompleted 73 percent (45/63) \tProcess Security Policy area        \n\nCompleted 77 percent (48/63) \tProcess Security Policy area        \n\nCompleted 84 percent (52/63) \tProcess Security Policy area        \n\nCompleted 88 percent (55/63) \tProcess Security Policy area        \n\nCompleted 93 percent (58/63) \tProcess Security Policy area        \n\nCompleted 100 percent (63/63) \tProcess Security Policy area        \n\n                                                                           \nThe task has completed successfully.", "key": "ResetLockoutCount", "section": "System Access", "value": 1800}
+
+TASK [compliance/cis : CIS,2.2.1,CCE-37056-9 | Ensure 'Access Credential Manager as a trusted caller' is set to 'No One'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.2,CCE-35818-4 | Ensure 'Access this computer from the network' is set to 'Administrators, Remote Desktop Users'] ***
+changed: [windows10] => {"added": ["BUILTIN\\Remote Desktop Users"], "changed": true, "removed": ["BUILTIN\\Backup Operators", "BUILTIN\\Users", "Everyone"]}
+
+TASK [compliance/cis : CIS,2.2.3,CCE-36876-1 | Ensure 'Act as part of the operating system' is set to 'No One'] ***
+changed: [windows10] => {"added": [], "changed": true, "removed": ["VAGRANT-10\\sshd_server"]}
+
+TASK [compliance/cis : CIS,2.2.4,CCE-37071-8 | Ensure 'Adjust memory quotas for a process' is set to 'Administrators, LOCAL SERVICE, NETWORK SERVICE'] ***
+changed: [windows10] => {"added": [], "changed": true, "removed": ["VAGRANT-10\\sshd_server"]}
+
+TASK [compliance/cis : CIS,2.2.5,CCE-37659-0 | Ensure 'Allow log on locally' is set to 'Administrators, Users'] ***
+changed: [windows10] => {"added": [], "changed": true, "removed": ["BUILTIN\\Backup Operators", "VAGRANT-10\\Guest"]}
+
+TASK [compliance/cis : CIS,2.2.6,CCE-37072-6 | Ensure 'Allow log on through Remote Desktop Services' is set to 'Administrators, Remote Desktop Users'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.7,CCE-35912-5 | Ensure 'Back up files and directories' is set to 'Administrators'] ***
+changed: [windows10] => {"added": [], "changed": true, "removed": ["BUILTIN\\Backup Operators"]}
+
+TASK [compliance/cis : CIS,2.2.8,CCE-37452-0 | Ensure 'Change the system time' is set to 'Administrators, LOCAL SERVICE'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.9,CCE-37700-2 | Ensure 'Change the time zone' is set to 'Administrators, LOCAL SERVICE'] ***
+changed: [windows10] => {"added": [], "changed": true, "removed": ["BUILTIN\\Users"]}
+
+TASK [compliance/cis : CIS,2.2.10,CCE-35821-8 | Ensure 'Create a pagefile' is set to 'Administrators'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.11,CCE-36861-3 | Ensure 'Create a token object' is set to 'No One'] ***
+changed: [windows10] => {"added": [], "changed": true, "removed": ["VAGRANT-10\\sshd_server"]}
+
+TASK [compliance/cis : CIS,2.2.12,CCE-37453-8 | Ensure 'Create global objects' is set to 'Administrators, LOCAL SERVICE, NETWORK SERVICE, SERVICE'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.13,CCE-36532-0 | Ensure 'Create permanent shared objects' is set to 'No One'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.14,CCE-35823-4 | Configure 'Create symbolic links'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.15,CCE-37075-9 | Ensure 'Debug programs' is set to 'Administrators'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.16,CCE-37954-5 | Configure 'Deny access to this computer from the network' to include 'Guests, Local Account'] ***
+changed: [windows10] => {"added": ["BUILTIN\\Guests", "NT AUTHORITY\\Local account"], "changed": true, "removed": ["VAGRANT-10\\Guest", "VAGRANT-10\\sshd_server"]}
+
+TASK [compliance/cis : CIS,2.2.17,CCE-36923-1 | Ensure 'Deny log on as a batch job' to include 'Guests'] ***
+changed: [windows10] => {"added": ["BUILTIN\\Guests"], "changed": true, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.18,CCE-36877-9 | Ensure 'Deny log on as a service' to include 'Guests'] ***
+changed: [windows10] => {"added": ["BUILTIN\\Guests"], "changed": true, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.19,CCE-37146-8 | Ensure 'Deny log on locally' to include 'Guests'] ***
+changed: [windows10] => {"added": ["BUILTIN\\Guests"], "changed": true, "removed": ["VAGRANT-10\\Guest", "VAGRANT-10\\sshd_server"]}
+
+TASK [compliance/cis : CIS,2.2.20,CCE-36867-0 | Configure 'Deny log on through Remote Desktop Services' to include 'Guests, Local Account'] ***
+changed: [windows10] => {"added": ["BUILTIN\\Guests", "NT AUTHORITY\\Local account"], "changed": true, "removed": ["VAGRANT-10\\sshd_server"]}
+
+TASK [compliance/cis : CIS,2.2.21,CCE-36860-5 | Ensure 'Enable computer and user accounts to be trusted for delegation' is set to 'No One'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.22,CCE-37877-8 | Ensure 'Force shutdown from a remote system' is set to 'Administrators'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.23,CCE-37639-2 | Ensure 'Generate security audits' is set to 'LOCAL SERVICE, NETWORK SERVICE'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.24,CCE-37106-2 | Ensure 'Impersonate a client after authentication' is set to 'Administrators, LOCAL SERVICE, NETWORK SERVICE, SERVICE'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.25,CCE-38326-5 | Ensure 'Increase scheduling priority' is set to 'Administrators, Window Manager\Window Manager Group'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.26,CCE-36318-4 | Ensure 'Load and unload device drivers' is set to 'Administrators'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.27,CCE-36495-0 | Ensure 'Lock pages in memory' is set to 'No One'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.30,CCE-35906-7 | Configure 'Manage auditing and security log' is set to 'Administrators'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.31,CCE-36054-5 | Ensure 'Modify an object label' is set to 'No One'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.32,CCE-38113-7 | Ensure 'Modify firmware environment values' is set to 'Administrators'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.33,CCE-36143-6 | Ensure 'Perform volume maintenance tasks' is set to 'Administrators'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.34,CCE-37131-0 | Ensure 'Profile single process' is set to 'Administrators'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.35,CCE-36052-9 | Ensure 'Profile system performance' is set to 'Administrators, NT SERVICE\WdiServiceHost'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.2.36,CCE-37430-6 | Ensure 'Replace a process level token' is set to 'LOCAL SERVICE, NETWORK SERVICE'] ***
+changed: [windows10] => {"added": [], "changed": true, "removed": ["VAGRANT-10\\sshd_server"]}
+
+TASK [compliance/cis : CIS,2.2.37,CCE-37613-7 | Ensure 'Restore files and directories' is set to 'Administrators'] ***
+changed: [windows10] => {"added": [], "changed": true, "removed": ["BUILTIN\\Backup Operators"]}
+
+TASK [compliance/cis : CIS,2.2.38,CCE-38328-1 | Ensure 'Shut down the system' is set to 'Administrators, 'Users'] ***
+changed: [windows10] => {"added": [], "changed": true, "removed": ["BUILTIN\\Backup Operators"]}
+
+TASK [compliance/cis : CIS,2.2.39,CCE-38325-7 | Ensure 'Take ownership of files or other objects' is set to 'Administrators'] ***
+ok: [windows10] => {"added": [], "changed": false, "removed": []}
+
+TASK [compliance/cis : CIS,2.3.1.1,CCE-37953-7 | Ensure 'Accounts: Administrator account status' is set to 'Disabled'] ***
+ok: [windows10] => {"changed": false, "key": "EnableAdminAccount", "section": "System Access", "value": "0"}
+
+TASK [compliance/cis : CIS,2.3.1.2,CCE-36147-7 | Ensure 'Accounts: Block Microsoft accounts' is set to 'Users can't add or log on with Microsoft accounts'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.1.3,CCE-37432-2 | Ensure 'Accounts: Guest account status' is set to 'Disabled'] ***
+ok: [windows10] => {"changed": false, "key": "EnableGuestAccount", "section": "System Access", "value": "0"}
+
+TASK [compliance/cis : CIS,2.3.1.4,CCE-37615-2 | Ensure 'Accounts: Limit local account use of blank passwords to console logon only' is set to 'Enabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.1.5,CCE-38233-3 | Configure 'Accounts: Rename administrator account'] ***
+ok: [windows10] => {"changed": false, "key": "NewAdministratorName", "section": "System Access", "value": "Administrator"}
+
+TASK [compliance/cis : CIS,2.3.1.6,CCE-38027-9 | Configure 'Accounts: Rename guest account'] ***
+ok: [windows10] => {"changed": false, "key": "NewGuestName", "section": "System Access", "value": "Guest"}
+
+TASK [compliance/cis : CIS,2.3.2.1,CCE-37850-5 | Ensure 'Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.2.2,CCE-35907-5 | Ensure 'Audit: Shut down system immediately if unable to log security audits' is set to 'Disabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.4.1,CCE-37701-0 | Ensure 'Devices: Allowed to format and eject removable media' is set to 'Administrators and Interactive Users'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.4.2,CCE-37942-0 | Ensure 'Devices: Prevent users from installing printer drivers' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.6.1,CCE-36142-8 | Ensure 'Domain member: Digitally encrypt or sign secure channel data (always)' is set to 'Enabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.6.2,CCE-37130-2 | Ensure 'Domain member: Digitally encrypt secure channel data (when possible)' is set to 'Enabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.6.3,CCE-37222-7 | Ensure 'Domain member: Digitally sign secure channel data (when possible)' is set to 'Enabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.6.4,CCE-37508-9 | Ensure 'Domain member: Disable machine account password changes' is set to 'Disabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.6.5,CCE-37431-4 | Ensure 'Domain member: Maximum machine account password age' is set to '30 or fewer days, but not 0'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.6.6,CCE-37614-5 | Ensure 'Domain member: Require strong (Windows 2000 or later) session key' is set to 'Enabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.7.1,CCE-37637-6 | Ensure 'Interactive logon: Do not require CTRL+ALT+DEL' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.7.2,CCE-36056-0 | Ensure 'Interactive logon: Don't display last signed-in' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.7.4,CCE-38235-8 | Ensure 'Interactive logon: Machine inactivity limit' is set to '900 or fewer second(s), but not 0'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.7.5,CCE-37226-8 | Configure 'Interactive logon: Message text for users attempting to log on'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.7.6,CCE-37512-1 | Configure 'Interactive logon: Message title for users attempting to log on'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.7.7,CCE-37439-7 | Ensure 'Interactive logon: Number of previous logons to cache (in case domain controller is not available)' is set to '4 or fewer logon(s)'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.7.8,CCE-37622-8 | Ensure 'Interactive logon: Prompt user to change password before expiration' is set to 'between 5 and 14 days'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.7.9,CCE-38333-1 | Ensure 'Interactive logon: Smart card removal behavior' is set to 'Lock Workstation' or higher] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.8.1,CCE-36325-9 | Ensure 'Microsoft network client: Digitally sign communications (always)' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.8.2,CCE-36269-9 | Ensure 'Microsoft network client: Digitally sign communications (if server agrees)' is set to 'Enabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.8.3,CCE-37863-8 | Ensure 'Microsoft network client: Send unencrypted password to third-party SMB servers' is set to 'Disabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.9.1,CCE-38046-9 | Ensure 'Microsoft network server: Amount of idle time required before suspending session' is set to '15 or fewer minute(s)] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.9.2,CCE-37864-6 | Ensure 'Microsoft network server: Digitally sign communications (always)' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.9.3,CCE-35988-5 | Ensure 'Microsoft network server: Digitally sign communications (if client agrees)' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.9.4,CCE-37972-7 | Ensure 'Microsoft network server: Disconnect clients when logon hours expire' is set to 'Enabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.9.5,CCE-36170-9 | Ensure 'Microsoft network server: Server SPN target name validation level' is set to 'Accept if provided by client' or higher] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.10.1,CCE-36065-1 | Ensure 'Network access: Allow anonymous SID/Name translation' is set to 'Disabled'] ***
+ok: [windows10] => {"changed": false, "key": "LSAAnonymousNameLookup", "section": "System Access", "value": "0"}
+
+TASK [compliance/cis : CIS,2.3.10.2,CCE-36316-8 | Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts' is set to 'Enabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.10.3,CCE-36077-6 | Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts and shares' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.10.4,CCE-36148-5 | Ensure 'Network access: Do not allow storage of passwords and credentials for network authentication' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.10.5,CCE-36148-5 | Ensure 'Network access: Let Everyone permissions apply to anonymous users' is set to 'Disabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.10.6,CCE-38258-0 | Configure 'Network access: Named Pipes that can be accessed anonymously'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.10.7,CCE-37194-8 | Ensure 'Network access: Remotely accessible registry paths' is configured] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.10.8,CCE-36347-3 | Ensure 'Network access: Remotely accessible registry paths and sub-paths' is configured] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.10.9,CCE-36021-4 | Ensure 'Network access: Restrict anonymous access to Named Pipes and Shares' is set to 'Enabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.10.10,CCE-Null | Ensure 'Network access: Restrict clients allowed to make remote calls to SAM' is set to 'Administrators: Remote Access: Allow'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.10.11,CCE-38095-6 | Ensure 'Network access: Shares that can be accessed anonymously' is set to 'None'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.10.12,CCE-37623-6 | Ensure 'Network access: Sharing and security model for local accounts' is set to 'Classic - local users authenticate as themselves'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.11.1,CCE-38341-4 | Ensure 'Network security: Allow Local System to use computer identity for NTLM' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.11.2,CCE-37035-3 | Ensure 'Network security: Allow LocalSystem NULL session fallback' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.11.3,CCE-38047-7 | Ensure 'Network Security: Allow PKU2U authentication requests to this computer to use online identities' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.11.4,CCE-37755-6 | Ensure 'Network security: Configure encryption types allowed for Kerberos' is set to 'AES128_HMAC_SHA1, AES256_HMAC_SHA1, Future encryption types'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.11.5,CCE-36326-7 | Ensure 'Network security: Do not store LAN Manager hash value on next password change' is set to 'Enabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.11.7,CCE-36173-3 | Ensure 'Network security: LAN Manager authentication level' is set to 'Send NTLMv2 response only. Refuse LM & NTLM'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.11.8,CCE-36858-9 | Ensure 'Network security: LDAP client signing requirements' is set to 'Negotiate signing' or higher] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.11.9,CCE-37553-5 | Ensure 'Network security: Minimum session security for NTLM SSP based (including secure RPC) clients' is set to 'Require NTLMv2 session security, Require 128-bit encryption'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.11.10,CCE-37835-6 | Ensure 'Network security: Minimum session security for NTLM SSP based (including secure RPC) servers' is set to 'Require NTLMv2 session security, Require 128-bit encryption'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.14.1,CCE-37885-1 | Ensure Ensure 'System cryptography: Force strong key protection for user keys stored on the computer' is set to 'User is prompted when the key is first used' or higher] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.15.1,CCE-37885-1 | Ensure 'System objects: Require case insensitivity for non-Windows subsystems' is set to 'Enabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.15.2,CCE-37644-2 | Ensure 'System objects: Strengthen default permissions of internal system objects (e.g. Symbolic Links)' is set to 'Enabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.17.1,CCE-36494-3 | Ensure 'User Account Control: Admin Approval Mode for the Built-in Administrator account' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.17.2,CCE-37029-6 | Ensure 'User Account Control: Behavior of the elevation prompt for administrators in Admin Approval Mode' is set to 'Prompt for consent on the secure desktop'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.17.3,CCE-36864-7 | Ensure 'User Account Control: Behavior of the elevation prompt for standard users' is set to 'Automatically deny elevation requests'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.17.4,CCE-36533-8 | Ensure 'User Account Control: Detect application installations and prompt for elevation' is set to 'Enabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.17.5,CCE-37057-7 | Ensure 'User Account Control: Only elevate UIAccess applications that are installed in secure locations' is set to 'Enabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.17.6,CCE-36869-6 | Ensure 'User Account Control: Run all administrators in Admin Approval Mode' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.17.7,CCE-36866-2 | Ensure 'User Account Control: Switch to the secure desktop when prompting for elevation' is set to 'Enabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,2.3.17.8,CCE-37064-3 | Ensure 'User Account Control: Virtualize file and registry write failures to per-user locations' is set to 'Enabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,5.4 | Ensure 'Downloaded Maps Manager (MapsBroker)' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,5.8 | Ensure 'Internet Connection Sharing (ICS) (SharedAccess)' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,5.34 | Ensure 'Windows Error Reporting Service (WerSvc)' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,5.36 | Ensure 'Windows Media Player Network Sharing Service (WMPNetworkSvc)' is set to 'Disabled' or 'Not Installed'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,5.37 | Ensure 'Windows Mobile Hotspot Service (icssvc)' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,5.40 | Ensure 'Windows Remote Management (WS-Management) (WinRM)' is set] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,5.40 | Ensure 'Windows Remote Management (WS-Management) (WinRM)' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,5.42 | Ensure 'Xbox Accessory Management Service (XboxGipSvc)' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,5.43 | Ensure 'Xbox Live Auth Manager (XblAuthManager)' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,5.44 | Ensure 'Xbox Live Game Save (XblGameSave)' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,5.45 | Ensure 'Xbox Live Networking Service (XboxNetApiSvc)' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.1.1,CCE-36062-8 | Ensure 'Windows Firewall: Domain: Firewall state' is set to 'On (recommended)'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.1.2,CCE-38117-8 | Ensure 'Windows Firewall: Domain: Inbound connections' is set to 'Block (default)'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.1.3,CCE-36146-9 | Ensure 'Windows Firewall: Domain: Outbound connections' is set to 'Allow (default)'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.1.4,CCE-38041-0 | Ensure 'Windows Firewall: Domain: Settings: Display a notification' is set to 'No'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.1.5,CCE-37482-7 | Ensure 'Windows Firewall: Domain: Logging: Name' is set to '%SYSTEMROOT%\System32\logfiles\firewall\domainfw.log'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.1.6,CCE-36088-3 | Ensure 'Windows Firewall: Domain: Logging: Size limit (KB)' is set to '16,384 KB or greater'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.1.7,CCE-37523-8 | Ensure 'Windows Firewall: Domain: Logging: Log dropped packets' is set to 'Yes'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.1.8,CCE-36393-7 | Ensure 'Windows Firewall: Domain: Logging: Log successful connections' is set to 'Yes'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.2.1,CCE-38239-0 | Ensure 'Windows Firewall: Private: Firewall state' is set to 'On (recommended)'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.2.2,CCE-38042-8 | Ensure 'Windows Firewall: Private: Inbound connections' is set to 'Block (default)'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.2.3,CCE-38332-3 | Ensure 'Windows Firewall: Private: Outbound connections' is set to 'Allow (default)'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.2.4,CCE-37621-0 | Ensure 'Windows Firewall: Private: Settings: Display a notification' is set to 'No'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.2.5,CCE-37569-1 | Ensure 'Windows Firewall: Private: Logging: Name' is set to '%SYSTEMROOT%\System32\logfiles\firewall\privatefw.log'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.2.6,CCE-38178-0 | Ensure 'Windows Firewall: Private: Logging: Size limit (KB)' is set to '16,384 KB or greater'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.2.7,CCE-35972-9 | Ensure 'Windows Firewall: Private: Logging: Log dropped packets' is set to 'Yes'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.2.8,CCE-37387-8 | Ensure 'Windows Firewall: Private: Logging: Log successful connections' is set to 'Yes'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.3.1,CCE-37862-0 | Ensure 'Windows Firewall: Public: Firewall state' is set to 'On (recommended)'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.3.2,CCE-36057-8 | Ensure 'Windows Firewall: Public: Inbound connections' is set to 'Block (default)'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.3.3,CCE-37434-8 | Ensure 'Windows Firewall: Public: Outbound connections' is set to 'Allow (default)'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.3.4,CCE-38043-6 | Ensure 'Windows Firewall: Public: Settings: Display a notification' is set to 'No'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.3.5,CCE-37861-2 | Ensure 'Windows Firewall: Public: Settings: Apply local firewall rules' is set to 'No'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.3.6,CCE-36268-1 | Ensure 'Windows Firewall: Public: Settings: Apply local connection security rules' is set to 'No'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.3.7,CCE-37266-4 | Ensure 'Windows Firewall: Public: Logging: Name' is set to '%SYSTEMROOT%\System32\logfiles\firewall\publicfw.log'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.3.8,CCE-36395-2 | Ensure 'Windows Firewall: Public: Logging: Size limit (KB)' is set to '16,384 KB or greater'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.3.9,CCE-37265-6 | Ensure 'Windows Firewall: Public: Logging: Log dropped packets' is set to 'Yes'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,9.3.10,CCE-36394-5 | Ensure 'Windows Firewall: Public: Logging: Log successful connections' is set to 'Yes'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,19.1.3.1,CCE-37970-1 | Ensure 'Enable screen saver' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,19.1.3.1,CCE-37970-1 | Ensure 'Enable screen saver' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,19.1.3.2,CCE-37658-2 | Ensure 'Password protect the screen saver' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,19.1.3.3,CCE-37908-1 | Ensure 'Screen saver timeout' is set to 'Enabled: 900 seconds or fewer, but not 0'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,19.1.3.3,CCE-37908-1 | Ensure 'Screen saver timeout' is set to 'Enabled: 900 seconds or fewer, but not 0'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.1.1.1,CCE-38347-1 | Ensure 'Prevent enabling lock screen camera' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.1.1.2,CCE-38348-9 | Ensure 'Prevent enabling lock screen slide show' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.1.2.2 | Ensure 'Allow users to enable online speech recognition services' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.3.1,CCE-37069-2 | Ensure 'Apply UAC restrictions to local accounts on network logons' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.3.3 | Ensure 'Configure SMB v1 server' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.4.1,CCE-37067-6 | Ensure 'MSS: (AutoAdminLogon) Enable Automatic Logon (not recommended)' is set to 'Disabled'] ***
+ok: [windows10] => {"changed": false, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.4.2,CCE-36871-2 | Ensure 'MSS: (DisableIPSourceRouting IPv6) IP source routing protection level (protects against packet spoofing)' is set to 'Enabled: Highest protection, source routing is completely disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.4.3,CCE-36535-3 | Ensure 'MSS: (DisableIPSourceRouting) IP source routing protection level (protects against packet spoofing)' is set to 'Enabled: Highest protection, source routing is completely disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.4.5,CCE-37988-3 | Ensure 'MSS: (EnableICMPRedirect) Allow ICMP redirects to override OSPF generated routes' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.4.7,CCE-36879-5 | Ensure 'MSS: (NoNameReleaseOnDemand) Allow the computer to ignore NetBIOS name release requests except from WINS servers' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.4.9 | Ensure 'MSS: (SafeDllSearchMode) Enable Safe DLL search mode (recommended)' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.3.10,CCE-37993-3 | Ensure 'MSS: (ScreenSaverGracePeriod) The time in seconds before the screen saver grace period expires (0 recommended)' is set to 'Enabled: 5 or fewer seconds'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.3.13,CCE-36880-3 | Ensure 'MSS: (WarningLevel) Percentage threshold for the security event log at which the system will generate a warning' is set to 'Enabled: 90% or less'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.5.4.2,CCE-Null | Ensure 'Turn off multicast name resolution' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.4.8.1,CCE-Null | Ensure 'Enable insecure guest logons' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.5.11.2,CCE-38002-2 | Ensure 'Prohibit installation and configuration of Network Bridge on your DNS domain network' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.5.11.3,CCE-Null | Ensure 'Prohibit use of Internet Connection Sharing on your DNS domain network' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.5.11.4,CCE-38188-9 | Ensure 'Require domain users to elevate when setting a network's location' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.5.14.1 | Hardened UNC Paths is set to 'Enabled, with 'Require Mutual Authentication' and 'Require Integrity' set for all NETLOGON shares'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.5.14.1 | Hardened UNC Paths is set to 'Enabled, with 'Require Mutual Authentication' and 'Require Integrity' set for all SYSVOL shares'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : 18.8.37.1,CCE-37346-4 | Ensure 'Enable RPC Endpoint Mapper Client Authentication' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.8.1,CCE-37636-8 | Ensure 'Disallow Autoplay for non-volume devices' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.8.2,CCE-38217-6 | Ensure 'Set the default behavior for AutoRun' is set to 'Enabled: Do not execute any autorun commands'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.8.3,CCE-36875-3 | Ensure 'Turn off Autoplay' is set to 'Enabled: All drives'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.27.1.2 | Ensure 'Application: Specify the maximum log file size (KB)' is set to 'Enabled: 32,768 or greater'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.27.2.2 | Ensure 'Security: Specify the maximum log file size (KB)' is set to 'Enabled: 196,608 or greater'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.27.3.2 | Ensure 'Setup: Specify the maximum log file size (KB)' is set to 'Enabled: 32,768 or greater'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.27.4.2 | Ensure 'System: Specify the maximum log file size (KB)' is set to 'Enabled: 32,768 or greater'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.58.1,CCE-36939-7 | Ensure 'Prevent the usage of OneDrive for file storage' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.65.3.9.1 | Ensure 'Always prompt for password upon connection' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.65.3.9.5 | Ensure 'Set client connection encryption level' is set to 'Enabled: High Level'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.67.5 | Ensure 'Allow indexing of encrypted files' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.75.1 | Ensure 'Disable all apps from Microsoft Store' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.75.3 | Ensure 'Turn off Automatic Download and Install of updates' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.75.4 | Ensure 'Turn off the offer to update to the latest version of Windows' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.75.5 | Ensure 'Turn off the Store application' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : 18.9.85.1.1 | Ensure 'Configure Windows Defender SmartScreen' is set to 'Enabled: Warn and prevent bypass'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : 18.9.85.1.1 | Ensure 'Configure Windows Defender SmartScreen' is set to 'Enabled: Warn and prevent bypass'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.85.2.1 | Ensure 'Configure Windows Defender SmartScreen' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.85.2.1 | Ensure 'Prevent bypassing Windows Defender SmartScreen prompts for sites' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.100.1 | Ensure 'Turn on PowerShell Script Block Logging' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.100.2 | Ensure 'Turn on PowerShell Transcription' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.103.1,CCE-36499-2 | Ensure 'Allow Remote Shell Access' is set to 'Disabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : Allow automatic updates] ********************************
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : Set automatic update option] ****************************
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.108.2.2 | Ensure 'Configure Automatic Updates: Scheduled install day' is set to '0 - Every day'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,18.9.108.2.3 | Ensure 'Remove access to “Pause updates” feature' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,19.7.28.1 | Ensure 'Prevent users from sharing files within their profile.' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : CIS,19.7.28.1 | Ensure 'Prevent users from sharing files within their profile.' is set to 'Enabled'] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : IE 64-bit tab | windows-ie-101] *************************
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : Run antimalware programs against ActiveX controls | windows-ie-102] ***
+changed: [windows10] => {"changed": true, "data_changed": false, "data_type_changed": false}
+
+TASK [compliance/cis : Microsoft Online Accounts | microsoft-online-accounts] ***
+changed: [windows10] => {"changed": true, "data_changed": true, "data_type_changed": false}
+
+PLAY RECAP *********************************************************************
+windows10                  : ok=219  changed=148  unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+

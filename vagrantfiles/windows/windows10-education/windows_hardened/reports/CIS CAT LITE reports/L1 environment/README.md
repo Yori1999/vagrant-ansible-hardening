@@ -1,0 +1,1 @@
+The reports found in this folder correspond to when the system gets provisioned with only Level 1 security policies. Audit analysis for checking what compliance score against Level 1 and Level 2 benchmarks this machine gets have been performed
