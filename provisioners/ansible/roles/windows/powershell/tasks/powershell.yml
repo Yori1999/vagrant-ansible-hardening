@@ -3,31 +3,40 @@
 
 - name: Deny powershell permissions for normal users
   block:
+    - name: Deny powershell_ise(x86) executable permissions for normal users
+      win_acl:
+        path: "C:\\Windows\\SysWOW64\\WindowsPowerShell\\v1.0\\powershell_ise.exe"
+        rights: ExecuteFile
+        type: deny
+        user: '{{ group_users }}'
+    - name: Deny powershell_ise execution permissions for normal users 
+      win_acl:
+        path: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell_ise.exe"
+        rights: ExecuteFile
+        type: deny
+        user: '{{ group_users }}'
     - name: Deny powershell(x86) executable permissions for normal users
       win_acl:
         path: "C:\\Windows\\SysWOW64\\WindowsPowerShell\\v1.0\\powershell.exe"
         rights: ExecuteFile
         type: deny
         user: '{{ group_users }}'
-      tags: ['windows','all']
     - name: Deny powershell(x86) folder permissions for normal users
       win_acl:
         path: "C:\\Windows\\SysWOW64\\WindowsPowerShell"
         rights: Traverse,FullControl
         type: deny
         user: '{{ group_users }}'
-      tags: ['windows','all']
     - name: Deny powershell folder permissions for normal users
       win_acl:
         path: "C:\\Windows\\System32\\WindowsPowerShell"
         rights: Traverse,FullControl
         type: deny
         user: '{{ group_users }}'
-      tags: ['windows','all']
     - name: Deny powershell execution permissions for normal users 
       win_acl:
         path: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
         rights: ExecuteFile
         type: deny
         user: '{{ group_users }}'
-      tags: ['windows','all']
+  tags: ['windows','all']
