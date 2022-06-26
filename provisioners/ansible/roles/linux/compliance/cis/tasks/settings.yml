@@ -43,8 +43,14 @@
   include_tasks: time_based_job_schedulers_config.yml
   tags:
    - configuration
-
-- name: Hardening policies for audit 
-  include_tasks: audit.yml
+  
+- name: Command line warning banners
+  include_tasks: command_line_warning_banners.yml
   tags:
    - configuration
+
+# Beware of the audit policies, as some settings might render connections (network, ssh...) fail
+# - name: Hardening policies for audit 
+#   include_tasks: audit.yml
+#   tags:
+#    - configuration

@@ -75,6 +75,9 @@ var_sudo_logfile: '/var/log/sudo.log'
 
 grub2_conf_file: '/etc/default/grub'
 
+motd_folder: '/etc/update-motd.d'
+remove_motd: False
+
 # PAM, password and account settings
 minlen: 14
 minclass: 4

@@ -24,6 +24,7 @@ Vagrant.configure("2") do |config|
     machine.vm.provision "shell", inline: $script 
     machine.vm.provision "shell", path: "provisioning/install_lynis.sh"
     machine.vm.provision "shell", path: "provisioning/install_auditd.sh"
+    machine.vm.provision "shell", path: "provisioning/change_keyboard_layout_es_console_setup.sh"
   end
 
   config.vm.define "controller" do |machine|
