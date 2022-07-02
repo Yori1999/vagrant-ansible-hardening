@@ -1,0 +1,18 @@
+---
+# Local administrators configuration
+
+- name: Configure local administrators
+  win_group_membership:
+    name: '{{ administrator_group }}'
+    members: '{{ local_administrators }}'
+    state: pure
+  tags: ['configuration']
+
+- name: Update password for '{{ local_admin_user }}'
+  win_user:
+    name: '{{ local_admin_user }}'
+    password: '{{ local_admin_password }}'
+    description: 'Cuenta de administracion local'
+    update_password: always
+    state: present
+  tags: ['configuration']

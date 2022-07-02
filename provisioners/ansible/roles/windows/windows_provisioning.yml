@@ -8,4 +8,5 @@
   roles:
     - updates
     - compliance/cis
+    - additional_security_config
     

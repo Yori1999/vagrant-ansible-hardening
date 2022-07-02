@@ -1,0 +1,8 @@
+---
+group_administrators: 'Administrators'
+local_administrators:
+  - 'Administrator'
+  - '{{ local_admin_user }}'
+
+local_admin_user: 'vagrant'
+local_admin_password: 'Test123...@#$%'
