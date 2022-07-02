@@ -1,6 +1,7 @@
 ---
 name: windows10
 box: win-10
+#box: win-10-es
 ram: 4096
 cores: 2
 ip: 172.17.177.21
