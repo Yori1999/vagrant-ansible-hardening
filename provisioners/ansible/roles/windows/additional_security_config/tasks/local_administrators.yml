@@ -3,7 +3,7 @@
 
 - name: Configure local administrators
   win_group_membership:
-    name: '{{ administrator_group }}'
+    name: '{{ group_administrators }}'
     members: '{{ local_administrators }}'
     state: pure
   tags: ['configuration']
@@ -12,7 +12,7 @@
   win_user:
     name: '{{ local_admin_user }}'
     password: '{{ local_admin_password }}'
-    description: 'Cuenta de administracion local'
+    description: 'Local administration account'
     update_password: always
     state: present
   tags: ['configuration']

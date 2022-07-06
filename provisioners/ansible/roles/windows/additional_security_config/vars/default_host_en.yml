@@ -5,4 +5,4 @@ local_administrators:
   - '{{ local_admin_user }}'
 
 local_admin_user: 'vagrant'
-local_admin_password: 'Test123...@#$%'
+local_admin_password: 'Test123...@#$%' # for sharing purposes, this password has been left in plain text. This should be placed in a vault
