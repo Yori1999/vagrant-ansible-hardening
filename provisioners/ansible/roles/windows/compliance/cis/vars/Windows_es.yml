@@ -42,4 +42,4 @@ group_backup_operators: 'Operadores de copia de seguridad'
 group_iis_users: IIS_IUSRS
 group_window_manager: Window Manager\Window Manager Group
 legal_notice_caption: 'Advertencia de seguridad'
-legal_notice_text: 'Éste es un sistema de <CHANGEME>. Sólo puede ser accedido por usuarios autorizados, para uso profesional. Su uso implica la aceptación de las políticas de uso corporativas. Este sistema está sujeto a monitorización.'
+legal_notice_text: 'Éste es un sistema de Uniovi. Sólo puede ser accedido por usuarios autorizados, para uso profesional. Su uso implica la aceptación de las políticas de uso corporativas. Este sistema está sujeto a monitorización.'
