@@ -25,12 +25,8 @@
     - name: Run command to unload the module
       command: rmmod '{{  item }}'
       loop:
-        - cramfs
-        - freevxfs
-        - jffs2
         - hfs
         - hfsplus
-        - udf
   tags: ['configuration']
 
 # Ensure /tmp is configured and mounted with nodev,nosuid,noexec options

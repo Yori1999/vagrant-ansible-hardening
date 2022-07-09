@@ -14,7 +14,6 @@
         - 91-release-upgrade
         - 10-help-text
         - 50-motd-news
-        - 92-unattended-upgrades
     - name: Custom motd messages
       copy:
         src: '../conf/motd'
