@@ -4,7 +4,7 @@
 RAM = 4096
 # Number of cores
 CORES = 2
-# Amount of available virtual memory
+# Amount of available video memory
 VRAM = 128
 # Box name; must be configured
 # This is the name I'm giving my box when I import it into the system, as it is not present in any public catalog
