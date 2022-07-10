@@ -1,0 +1,38 @@
+---
+- name: Determine Language settings
+  win_shell: 'Get-WinSystemLocale | select name'
+  register: language_settings
+  when:
+    - ansible_facts['os_family']|lower == "windows"
+  tags:
+   - powershell
+
+- name: Include variables for OS version (ES)
+  include_vars: '{{ item }}'
+  with_first_found:
+  - "default_host_es.yml"
+  when: 
+   - ansible_facts['os_family']|lower == "windows"
+   - "'es-es' in language_settings.stdout|lower"
+  tags:
+   - powershell
+
+- name: Include variables for OS version (EN)
+  include_vars: '{{ item }}'
+  with_first_found:
+  - "default_host_en.yml"
+  when:
+   - ansible_facts['os_family']|lower == "windows"
+   - "'es-es' not in language_settings.stdout|lower"
+  tags:
+   - powershell
+
+- name: Additional security configuration tasks for Windows Education workstations
+  include_tasks: '{{ item }}'
+  with_items:
+    - local_administrators.yml
+  when: >
+    ansible_facts['os_family']|lower == "windows" and
+    ansible_facts['os_name']|lower == "microsoft windows 10 education"
+  tags:
+   - powershell

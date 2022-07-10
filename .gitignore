@@ -1,1 +1,6 @@
 /vagrantfiles/*/*/*/.vagrant/
+/vagrantfiles/*/*/*/*/.vagrant/
+/vagrantfiles/*/*/*/provisioning/roles
+/vagrantfiles/*/*/*/*/provisioning/ansible/roles
+/vagrantfiles/*/*/*/*shared*/*
+/vagrantfiles/*/*/*/*/*shared*/*

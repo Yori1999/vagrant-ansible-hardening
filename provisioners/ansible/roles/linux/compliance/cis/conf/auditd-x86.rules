@@ -1,0 +1,128 @@
+-D
+-b 8192
+--backlog_wait_time 0
+-f 1
+
+## Things that could affect time
+## Ensure events that modify date and time information are collected
+-a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change
+-a always,exit -F arch=b32 -S clock_settime -k time-change
+-w /etc/localtime -p wa -k time-change
+
+## Record information on kernel module loading and unloading
+## Ensure kernel module loading and unloading is collected
+-w /sbin/insmod -p x -k modules
+-w /sbin/rmmod -p x -k modules
+-w /sbin/modprobe -p x -k modules
+-a always,exit -F arch=b32 -S init_module -S delete_module -k modules
+-a always,exit -F arch=b32 -S finit_module -F key=modules
+
+## Things that affect identity
+## Ensure events that modify user/group information are collected
+-w /etc/group -p wa -k identity
+-w /etc/passwd -p wa -k identity
+-w /etc/gshadow -p wa -k identity
+-w /etc/shadow -p wa -k identity
+-w /etc/security/opasswd -p wa -k identity
+
+## Things that could affect system locale
+## Ensure events that modify the system's network environment are collected
+-a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale
+-w /etc/issue -p wa -k system-locale
+-w /etc/issue.net -p wa -k system-locale
+-w /etc/hosts -p wa -k system-locale
+-w /etc/hostname -p wa -k system-locale
+-a always,exit -F dir=/etc/NetworkManager/ -F perm=wa -F key=system-locale
+
+## Things that could affect MAC policy
+## Ensure events that modify the system's Mandatory Access Controls are collected
+-a always,exit -F dir=/etc/selinux/ -F perm=wa -F key=MAC-policy
+-w /etc/apparmor/ -p wa -k MAC-policy
+-w /etc/apparmor.d/ -p wa -k MAC-policy
+
+## Logon (unsuccessful and successful) and logout (successful)
+## Ensure login and logout events are collected
+-w /var/log/faillog -p wa -k logins
+-w /var/log/lastlog -p wa -k logins
+-w /var/log/tallylog -p wa -k logins
+
+## Process and session initiation (unsuccessful and successful)
+## Ensure session initiation information is collected
+-w /var/run/utmp -p wa -k session
+-w /var/log/btmp -p wa -k session
+-w /var/log/wtmp -p wa -k session
+-w /var/log/wtmp -p wa -k logins
+-w /var/log/btmp -p wa -k logins
+
+## Discretionary access control permission modification (unsuccessful
+## and successful use of chown/chmod)
+## Ensure discretionary access control permission modification events are collected
+-a always,exit -F arch=b32 -S chmod,fchmod,fchmodat -F auid>=1000 -F auid!=-1 -F key=perm_mod
+-a always,exit -F arch=b32 -S lchown,fchown,chown,fchownat -F auid>=1000 -F auid!=-1 -F key=perm_mod
+-a always,exit -F arch=b32 -S setxattr,lsetxattr,fsetxattr,removexattr,lremovexattr,fremovexattr -F auid>=1000 -F auid!=-1 -F key=perm_mod
+
+## Unauthorized access attempts to files (unsuccessful)
+## Ensure unsuccessful unauthorized file access attempts are collected
+-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access
+-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access
+
+## Export to media (successful)
+## You have to mount media before using it. You must disable all automounting
+## so that its done manually in order to get the correct user requesting the
+## export
+-a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=unset -F key=export
+
+## Ensure successful file system mounts are collected
+-a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts
+
+## Files and programs deleted by the user (successful and unsuccessful)
+## Ensure file deletion events by users are collected
+-a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete
+
+## Modifications on sudoers files
+## Ensure changes to system administration scope (sudoers) is collected
+-w /etc/sudoers -p wa -k actions
+-w /etc/sudoers.d/ -p wa -k actions
+-w /etc/sudoers -p wa -k scope
+-w /etc/sudoers.d/ -p wa -k scope
+
+## Use of privileged commands
+-a always,exit -F path=/usr/bin/at -F perm=x -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/bin/chage -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/bin/chfn -F perm=x -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/bin/chsh -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/bin/crontab -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/bin/gpasswd -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/bin/chcon -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>=1000 -F auid!=unset -F key=privileged
+-w /sbin/insmod -p x -k modules
+-w /sbin/modprobe -p x -k modules
+-w /sbin/rmmod -p x -k modules
+-a always,exit -F path=/usr/bin/mount -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/bin/umount -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/bin/newgidmap -F perm=x -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/bin/newgrp -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/bin/newuidmap -F perm=x -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/bin/ssh-agent -F perm=x -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/sbin/postdrop -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/sbin/postqueue -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/bin/su -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/bin/sudo -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/bin/sudoedit -F perm=x -F auid>=1000 -F auid!=unset -F key=privileged
+-a always,exit -F path=/usr/sbin/unix_chkpwd -F auid>=1000 -F auid!=unset -F key=privileged
+
+## Events that modify time
+-a always,exit -F arch=b32 -S clock_settime -F a0=0x0 -F key=time-changes
+-a always,exit -F arch=b32 -S adjtimex,settimeofday -F key=time-changes
+
+## Events with privileged executables
+## Ensure system administrator command executions (sudo) are collected
+-a always,exit -F arch=b32 -S execve -C uid!=euid -F euid=0 -k setuid
+-a always,exit -F arch=b32 -S execve -C gid!=egid -F egid=0 -k setgid
+-a exit,always -F arch=b32 -C euid!=uid -F euid=0 -Fauid>=1000 -F auid!=4294967295 -S execve -k actions
+
+## Make the configuration immutable - reboot is required to change audit rules
+## Ensure the audit configuration is immutable
+-e 2
+

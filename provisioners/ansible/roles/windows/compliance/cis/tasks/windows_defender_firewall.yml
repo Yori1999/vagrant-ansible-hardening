@@ -30,7 +30,7 @@
      type: dword
   tags: ['configuration']
 
-# When the Apply local firewall rules setting is configured to No, it's recommended to also configure this setting to 'No' to avoid displaying messages to the users asking them if they want to unblock the connection
+# When the Apply local firewall rules setting is configured to 'No', it's recommended to also configure this setting to 'No' to avoid displaying messages to the users asking them if they want to unblock the connection
 # By default, notifications will be displayed ('Yes')
 - name: "CIS,9.1.4,CCE-38041-0 | Ensure 'Windows Firewall: Domain: Settings: Display a notification' is set to 'No'"
   win_regedit:
@@ -66,7 +66,7 @@
      type: dword
   tags: ['configuration']
 
-# By default, Information about successful connections will not be recorded in the firewall log file ('No')
+# By default, information about successful connections will not be recorded in the firewall log file ('No')
 - name: "CIS,9.1.8,CCE-36393-7 | Ensure 'Windows Firewall: Domain: Logging: Log successful connections' is set to 'Yes'"
   win_regedit:
      path: HKLM:\Software\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging

@@ -1,0 +1,68 @@
+---
+# With the current configuration of packages_absent, this task complies with the following CIS recommendations:
+# CIS, 4.1.1.1 - Ensure auditd is installed
+- name: Make sure that software required by CIS standard is present
+  apt:
+    name: '{{ packages_present }}'
+    state: present
+    update_cache: yes
+  when:
+    - ansible_facts['os_family']|lower == "debian"
+  tags: ['install']
+
+- name: Install and enable systemd-timesyncd 
+  block: 
+    - name: Ensure systemd-timesyncd is installed
+      package:
+        name: systemd-timesyncd
+        state: present
+    - name: Gather the package facts
+      package_facts:
+        manager: auto
+    - name: Enable service systemd-timesyncd
+      service:
+        name: systemd-timesyncd
+        enabled: 'yes'
+        state: started
+        masked: 'no'
+      when:
+        - '"systemd-timesyncd" in ansible_facts.packages'
+  tags: ['install']
+
+- name: Filesystem integrity checking policies (make sure AIDE is installed)
+  include_tasks: filesystem_integrity_checking.yml
+  when: (aide_required|default(False) == True)
+  tags: ['install']
+
+# With the current configuration of packages_absent, this task complies with the following CIS recommendations:
+# CIS, 2.1.3 - Ensure Avahi Server is not installed
+# CIS, 2.1.5 - Ensure DHCP Server is not installed -> recommended, unless a system is specifically set up to act as a DHCP server
+# CIS, 2.1.6 - Ensure LDAP server is not installed -> recommended if the system isn't gonna act as an LDAP server
+# CIS, 2.1.7 - Ensure NFS is not installed -> recommended unless the system exports NFS shares/acts as an NFS client
+# CIS, 2.1.8 - Ensure DNS Server is not installed -> recommended unless the system needs to specifically act as a DNS server
+# CIS, 2.1.9 - Ensure FTP Server is not installed -> recommended unless the system needs to act as an FTP server
+# CIS, 2.1.10 - Ensure HTTP server is not installed -> recommened unless the system needs to act as a web server 
+# CIS, 2.1.11 - Ensure IMAP and POP3 server are not installed -> recommended unless these servers need to be provided by this system
+# CIS, 2.1.12 - Ensure Samba is not installed
+# CIS, 2.1.13 - Ensure HTTP Proxy Server is not installed -> recommended if no need for a proxy server
+# CIS, 2.1.14 - Ensure SNMP Server is not installed
+# CIS, 2.1.16 - Ensure rsync service is not installed
+# CIS, 2.1.17 - Ensure NIS Server is not installed
+# CIS, 2.2.1 - Ensure NIS Client is not installed
+# CIS, 2.2.2 - Ensure rsh client is not installed
+# CIS, 2.2.3 - Ensure talk client is not installed
+# CIS, 2.2.4 - Ensure telnet client is not installed
+# CIS, 2.2.5 - Ensure LDAP client is not installed -> recommended unless the systems needs to act as an LDAP client; it will prevent/inhibit using LDAP for authentication
+# CIS, 2.2.6 - Ensure RPC is not installed
+# CIS, 2.3 - Ensure nonessential services are removed or masked
+# If you wish to provision a server, by uncommenting the corresponding packages you'll also comply with:
+# CIS, 2.1.2 - Ensure X Window System is not installed
+- name: Make sure that software prohibited (or recommended to be uninstalled unless necessary) by CIS standard is absent
+  apt:
+    name: '{{ packages_absent }}'
+    state: absent
+    update_cache: yes
+  when:
+    - ansible_facts['os_family']|lower == "debian"
+  tags: ['install']
+

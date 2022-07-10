@@ -8,6 +8,9 @@ windows_machine = YAML.load_file('windows_machine.yml')
 
 #ENV['VAGRANT_EXPERIMENTAL'] = 'disks'
 
+# Amount of available virtual memory
+VRAM = windows_machine['vram']
+
 Vagrant.configure("2") do |config|
   Vagrant.require_version ">= 2.1.18"
 
@@ -25,31 +28,50 @@ Vagrant.configure("2") do |config|
       vb.gui = true # Display the VirtualBox GUI when booting the machine
       vb.memory = windows_machine['ram'] # Customize the amount of memory on the VM
       vb.cpus = windows_machine['cores']
+
+      # VM customization via VBoxManage
+      vb.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
+      vb.customize ["modifyvm", :id, "--vram", VRAM]
     end
     
     # Copy some required files
-    machine.vm.provision "file", source:"../../../../files/CLARA", destination:"CLARA" # This places the folder under Documents for the vagrant user
-    machine.vm.provision "file", source:"./insecure_private_key", destination:"/vagrant/.vagrant/machines/windows10/virtualbox/insecure_private_key"
+    machine.vm.provision "file", source: "../../../../files/CLARA", destination: "CLARA" # This places the folder under Documents for the vagrant user
+    machine.vm.provision "file", source: "./insecure_private_key", destination: "/vagrant/.vagrant/machines/windows10/virtualbox/insecure_private_key"
   
     # Shared folder (host path, guest path)
-    machine.vm.synced_folder "shared", "/host_data", mount_options:  ["umask=077"]
+    machine.vm.synced_folder "./windows_shared", "/host_data", mount_options: ["umask=077"]
   end
 
   config.vm.define "controller" do |machine|
     machine.vm.box = "ubuntu/trusty64"
     machine.vm.network "private_network", ip: "172.17.177.11"
 
+    machine.vm.provision "file", source: "../../../../provisioners/ansible/roles/windows", destination: "/vagrant/provisioning/roles/windows"
+
     machine.vm.provision "ansible_local" do |ansible|
-      ansible.playbook         = "roles/windows/windows_provisioning.yml"
-      ansible.verbose          = true
-      ansible.install          = true
-      ansible.limit            = "windows" # or only "nodes" group, etc.
-      ansible.inventory_path   = "inventory"
-      ansible.become           = "yes"
-      ansible.config_file      = "ansible.cfg"
-      ansible.version          = "latest"
+      ansible.playbook          = "provisioning/roles/windows/windows_provisioning.yml"
+      ansible.verbose           = true
+      ansible.install           = true
+      ansible.limit             = "windows" # or only "nodes" group, etc.
+      ansible.inventory_path    = "provisioning/inventory"
+      ansible.become            = "yes"
+      ansible.config_file       = "provisioning/ansible.cfg"
+      ansible.version           = "latest"
     end
+
+    if windows_machine['disable_powershell']
+      machine.vm.provision "ansible_local" do |ansible|
+        ansible.playbook          = "provisioning/roles/windows/powershell_provisioning.yml"
+        ansible.verbose           = true
+        ansible.limit             = "windows"
+        ansible.inventory_path    = "provisioning/inventory"
+        ansible.become            = "yes"
+        ansible.config_file       = "provisioning/ansible.cfg"
+      end
+    end
+
     machine.vm.synced_folder ".", "/vagrant", mount_options: ["umask=077"]
+    
   end
 
 end

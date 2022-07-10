@@ -1,0 +1,104 @@
+---
+packages_present:
+  - libopenscap8
+  - ssg-base
+  - ssg-debderived
+  - ssg-debian
+  - ssg-nondebian
+  - ssg-applications
+  - libpam-runtime
+  - libpam-cracklib
+  - libpam-pwquality
+  - libpwquality-tools
+  - auditd
+  - rsyslog
+  - cron
+  - debsums
+  - apt-show-versions
+
+packages_absent:
+  - nis
+  - avahi-daemon
+  - telnet
+  - telnetd
+  - telnetd-ssl
+  - inetutils-telnetd
+  - ntpdate
+  - chrony
+  - isc-dhcp-server
+  - slapd
+  - nfs-kernel-server
+  - bind9
+  - vsftpd
+  - apache2
+  - dovecot-imapd
+  - dovecot-pop3d
+  - samba
+  - squid
+  - snmpd
+  - rsync
+  - rsh-client
+  - talk
+  - ldap-utils
+  - rpcbind
+  #- xserver-xorg* # only for servers
+  #- cups # to really comply with the CIS recommendation this should be uninstalled. For servers -> L1. For workstations -> L2.
+
+services_running:
+  - auditd
+  - rsyslog
+  - cron
+  - ufw
+  - sshd
+  #- systemd-timesyncd # service masked
+
+services_stopped:
+  - ntp # We can instead use systemd-timesyncd
+  - cups # to really comply with the CIS recommendation this should be uninstalled. For servers -> L1. For workstations -> L2.
+  - apport.service
+
+scap_guides_version: '0.1.60'
+scap_guides_folder: '/usr/share/xml/scap'
+
+ssh_simmetric_ciphers: 'chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr'
+ssh_mac_ciphers: 'hmac-sha2-256,hmac-sha2-512,hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com'
+ssh_hostkey_ciphers: 'ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,ssh-rsa,ssh-dss'
+ssh_kex_ciphers: 'ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256'
+ssh_clientalivecountmax: 0
+ssh_clientaliveinterval: 300 
+ssh_maxauthtries: 4
+ssh_maxsessions: 2
+ssh_loglevel: 'INFO'
+ssh_login_grace_time: 60
+
+var_sudo_logfile: '/var/log/sudo.log'
+
+grub2_conf_file: '/etc/default/grub'
+
+motd_folder: '/etc/update-motd.d'
+remove_motd: False
+
+# PAM, password and account settings
+minlen: 14
+minclass: 4
+retry: 3
+lcredit: -1
+ucredit: -1
+dcredit: -1
+ocredit: -1
+difok: 5
+pwd_remember: 5
+pwd_max_days: 365
+pwd_min_days: 1
+pwd_warn_age: 7
+max_failed_login_attempts: 5 
+unlock_timeout: 600 
+user_inactivity: 30
+default_umask: '027'
+
+file_environment: '/etc/environment'
+histfilesize: 30
+histsize: 30
+session_timeout: 600
+
+aide_required: True

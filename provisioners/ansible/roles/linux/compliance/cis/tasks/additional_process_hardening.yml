@@ -1,0 +1,35 @@
+---
+# This is a kernel parameter affecting memory and filesystems
+# Ensure sysctl kernel.randomize_va_space is set to 2
+- name: CIS, 1.5.2 - Ensure address space layout randomization (ASLR) is enabled
+  sysctl:
+    name: kernel.randomize_va_space
+    value: '2'
+    state: present
+    reload: true
+  tags: ['configuration']
+
+- name: CIS, 1.5.4 - Ensure core dumps are restricted
+  block:
+    - name: Ensure sysctl fs.suid_dumpable is set to 0
+      sysctl:
+        name: fs.suid_dumpable
+        value: '0'
+        state: present
+        reload: true
+    - name: Prevent memory dumps
+      lineinfile: 
+        path: /etc/security/limits.conf
+        create: false
+        owner: root
+        group: root
+        mode: '0644'
+        line: '{{ line }}'
+        state: present
+        insertbefore: ^[#\s]*End of file
+      loop:
+        - '* soft core 0'
+        - '* hard core 0'
+      loop_control:
+        loop_var: line
+  tags: ['configuration']

@@ -42,7 +42,7 @@
    - compliance
    - cis
 
-- name: US General Services Administration policies (CIS compliant) for Windows Education workstations
+- name: Center for Internet Security policies (CIS compliant) for Windows Education workstations
   include_tasks: '{{ item }}'
   with_items:
     - access_checks.yml
@@ -52,6 +52,7 @@
     - windows_defender_firewall.yml
     - personalization.yml
     - administrative_templates.yml
+    - administrative_templates_user.yml
     - complementary_to_cis.yml
   when: >
     ansible_facts['os_family']|lower == "windows" and

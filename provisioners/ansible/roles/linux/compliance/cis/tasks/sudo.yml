@@ -1,0 +1,29 @@
+---
+# CONFIGURE SUDO
+
+- name: Check permissions in sudoers directory 
+  file:
+    path: '/etc/sudoers.d' 
+    owner: root
+    group: root
+    mode: 0750
+  tags: ['configuration']
+
+- name: CIS, 5.2.2 - Ensure sudo commands use pty
+  lineinfile:
+    path: /etc/sudoers
+    regexp: ^[\s]*Defaults.*\buse_pty\b.*$
+    line: 'Defaults use_pty'
+    insertafter: '^[\s]*Defaults.*\bsecure_path'
+    validate: /usr/sbin/visudo -cf %s
+  tags: ['configuration']
+
+- name: CIS, 5.2.3 - Ensure sudo log file exists (and is configured appropriately)
+  lineinfile:
+    path: /etc/sudoers
+    regexp: ^[\s]*Defaults.*\blogfile=\b.*$
+    line: 'Defaults    logfile="{{ var_sudo_logfile }}"'
+    insertafter: '^[\s]*Defaults.*\buse_pty'
+    validate: /usr/sbin/visudo -cf %s
+  tags: ['configuration']
+

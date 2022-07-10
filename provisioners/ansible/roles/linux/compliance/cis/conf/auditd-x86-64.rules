@@ -1,0 +1,74 @@
+-D
+-b 8192
+--backlog_wait_time 0
+-f 1
+
+## Things that could affect time
+## Ensure events that modify date and time information are collected
+-a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change
+-a always,exit -F arch=b64 -S clock_settime -k time-change
+
+## Record information on kernel module loading and unloading
+-a always,exit -F arch=b64 -S init_module -S delete_module -k modules
+-a always,exit -F arch=b64 -S finit_module -F key=modules
+
+## Things that affect identity
+## Ensure events that modify user/group information are collected
+
+## Things that could affect system locale
+## Ensure events that modify the system's network environment are collected
+-a always,exit -F arch=b64 -S sethostname -S setdomainname -k system-locale
+
+## Things that could affect MAC policy
+## Ensure events that modify the system's Mandatory Access Controls are collected
+
+## Logon (unsuccessful and successful) and logout (successful)
+## Ensure login and logout events are collected
+
+## Process and session initiation (unsuccessful and successful)
+## Ensure session initiation information is collected
+
+## Discretionary access control permission modification (unsuccessful
+## and successful use of chown/chmod)
+## Ensure discretionary access control permission modification events are collected
+-a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod
+
+## Unauthorized access attempts to files (unsuccessful)
+## Ensure unsuccessful unauthorized file access attempts are collected
+-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access
+-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access
+
+## Export to media (successful)
+## You have to mount media before using it. You must disable all automounting
+## so that its done manually in order to get the correct user requesting the
+## export
+-a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=unset -F key=export
+
+## Ensure successful file system mounts are collected
+-a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts
+
+## Files and programs deleted by the user (successful and unsuccessful)
+## Ensure file deletion events by users are collected
+-a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete
+
+## Modifications on sudoers files
+## Ensure changes to system administration scope (sudoers) is collected
+
+## Use of privileged commands
+
+## Events that modify time
+-a always,exit -F arch=b64 -S clock_settime -F a0=0x0 -F key=time-changes
+-a always,exit -F arch=b64 -S adjtimex,settimeofday -F key=time-changes
+
+## Events with privileged executables
+## Ensure system administrator command executions (sudo) are collected
+-a always,exit -F arch=b64 -S execve -C uid!=euid -F euid=0 -k setuid
+-a always,exit -F arch=b64 -S execve -C gid!=egid -F egid=0 -k setgid
+-a always,exit -F arch=b64 -C euid!=uid -F euid=0 -Fauid>=1000 -F auid!=4294967295 -S execve -k actions
+
+## Make the configuration immutable - reboot is required to change audit rules
+## Ensure the audit configuration is immutable
+-e 2
+

@@ -1,0 +1,26 @@
+---
+- name: restart_timesyncd
+  systemd:
+    state: restarted
+    name: systemd-timesyncd
+
+- name: reload_systemd
+  shell: systemctl daemon-reload
+
+- name: restart_sshd
+  systemd:
+    state: restarted
+    name: sshd
+
+- name: restart_auditd
+  systemd:
+    state: restarted
+    name: auditd
+
+- name: update_grub2
+  command: /usr/sbin/update-grub
+
+- name: initialize_AIDE_database
+  command:
+    cmd: /usr/sbin/aideinit
+    creates: /var/lib/aide/aide.db.new.gz

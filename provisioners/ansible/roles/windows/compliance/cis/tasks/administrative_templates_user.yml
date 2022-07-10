@@ -1,0 +1,18 @@
+---
+
+# NETWORK SHARING
+- name: "CIS,19.7.28.1 | Ensure 'Prevent users from sharing files within their profile.' is set to 'Enabled'"
+  win_regedit:
+     path: HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+     name: "NoInplaceSharing"
+     data: "1" # Enabled
+     type: dword
+  tags: ['configuration']
+
+- name: "CIS,19.7.28.1 | Ensure 'Prevent users from sharing files within their profile.' is set to 'Enabled'"
+  win_regedit:
+     path: HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+     name: "NoInplaceSharing"
+     data: "1" # Enabled
+     type: dword
+  tags: ['configuration']

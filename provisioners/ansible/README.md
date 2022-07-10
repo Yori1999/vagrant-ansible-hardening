@@ -1,0 +1,3 @@
+The Ansible code present in these folders is meant to be used for hardening both Windows and Linux machines according to, mainly, CIS Benchmarks recommendations', though some ENS-based recommendations and other good security practices have also been included.
+
+Special credit has to be given to the Cyber Ansible project (https://github.com/carloslacasa/cyber-ansible) and its creator, Carlos Lacasa, as that project has been one of the most important starting points of this project.

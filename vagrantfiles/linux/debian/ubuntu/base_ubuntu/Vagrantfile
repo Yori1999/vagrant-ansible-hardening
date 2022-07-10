@@ -1,0 +1,22 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define "ubuntu" do |machine|
+    machine.vm.box = "hashicorp/bionic64"
+    machine.vm.network "private_network", ip: "172.17.177.21"
+    machine.vm.boot_timeout = 1800 # 30 minutes
+    machine.vm.network :forwarded_port, guest: 22, host: 2222, id: "ssh", auto_correct: true
+
+    # This is the VirtualBox VM solution. Use this if you can, as it has more options and optimizations
+    machine.vm.provider "virtualbox" do |vb|
+      vb.memory = 1024
+      vb.gui = true
+    end
+    machine.vm.synced_folder "./ubuntu_shared", "/host_data", mount_options: ["umask=077"]
+    machine.vm.provision "shell", path: "install_lynis.sh"
+    machine.vm.provision "shell", path: "change_keyboard_layout_es_console_setup.sh"
+  end
+  
+end

@@ -1,0 +1,56 @@
+---
+- name: sudo configuration
+  include_tasks: sudo.yml
+  tags:
+   - configuration
+
+- name: Filesystem policies
+  include_tasks: filesystem.yml
+  tags:
+   - configuration
+
+- name: Logging and auditing - Logrotate policies
+  include_tasks: logrotate.yml
+  tags:
+   - configuration
+
+- name: Hardening policies for user accounts and environments
+  include_tasks: user_accounts.yml 
+  tags:
+  - configuration
+
+- name: Additional hardening policies for passwords
+  include_tasks: additional_password_config.yml 
+  tags:
+  - configuration
+
+- name: Additional hardening policies
+  include_tasks: additional_process_hardening.yml 
+  tags:
+  - configuration
+
+- name: Hardening policies for ssh 
+  include_tasks: ssh.yml
+  tags:
+   - configuration
+
+- name: Network configuration policies
+  include_tasks: network_configuration.yml
+  tags:
+   - configuration
+
+- name: Time-based job schedulers configuration policies
+  include_tasks: time_based_job_schedulers_config.yml
+  tags:
+   - configuration
+  
+- name: Command line warning banners
+  include_tasks: command_line_warning_banners.yml
+  tags:
+   - configuration
+
+# Beware of the audit policies, as some settings might render connections (network, ssh...) fail
+# - name: Hardening policies for audit 
+#   include_tasks: audit.yml
+#   tags:
+#    - configuration

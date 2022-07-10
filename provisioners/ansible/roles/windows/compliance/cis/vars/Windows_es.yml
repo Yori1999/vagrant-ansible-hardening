@@ -26,6 +26,7 @@ subcategory_removable_storage: 'Almacenamiento extraíble'
 subcategory_security_state_change: 'Cambio de estado de seguridad'
 subcategory_system_integrity: 'Integridad del sistema'
 subcategory_security_system_extension: 'Extensión del sistema de seguridad'
+subcategory_group_membership: 'Pertenencia a grupos'
 
 ### User variables
 group_administrators: Administradores
@@ -39,5 +40,6 @@ group_users: Usuarios
 group_guests: Invitados
 group_backup_operators: 'Operadores de copia de seguridad'
 group_iis_users: IIS_IUSRS
+group_window_manager: Window Manager\Window Manager Group
 legal_notice_caption: 'Advertencia de seguridad'
-legal_notice_text: 'Éste es un sistema de <CHANGEME>. Sólo puede ser accedido por usuarios autorizados, para uso profesional. Su uso implica la aceptación de las políticas de uso corporativas. Este sistema está sujeto a monitorización.'
+legal_notice_text: 'Éste es un sistema de Uniovi. Sólo puede ser accedido por usuarios autorizados, para uso profesional. Su uso implica la aceptación de las políticas de uso corporativas. Este sistema está sujeto a monitorización.'

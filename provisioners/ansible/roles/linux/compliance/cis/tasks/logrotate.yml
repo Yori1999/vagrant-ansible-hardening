@@ -1,0 +1,41 @@
+---
+# LOGGING AND AUDITING
+
+# Logrotate configuration
+# This refers to keeping the log files smaller and more manageable by rotating them regularly
+# It will avoid filling the system up with logs or making these logs too large to be manageable
+
+# These tasks comply with CIS, 4.3 - Ensure logrotate is configured, though you should check these settings
+# to make sure they are adequately configured for your site/organization policy
+
+- name: Configure daily log rotation in /etc/logrotate.conf
+  lineinfile:
+    create: true
+    dest: /etc/logrotate.conf
+    regexp: ^daily$
+    line: daily
+  tags: ['configuration']
+
+- name: Make sure daily log rotation setting is not overriden in /etc/logrotate.conf
+  lineinfile:
+    create: false
+    dest: /etc/logrotate.conf
+    regexp: ^[\s]*(weekly|monthly|yearly)$
+    state: absent
+  tags: ['configuration']
+
+- name: Configure cron.daily if not already
+  block:
+    - name: Add shebang
+      lineinfile:
+        path: /etc/cron.daily/logrotate
+        line: '#!/bin/sh'
+        insertbefore: BOF
+        create: true
+    - name: Add logrotate call
+      lineinfile:
+        path: /etc/cron.daily/logrotate
+        line: /usr/sbin/logrotate /etc/logrotate.conf
+        regexp: ^[\s]*/usr/sbin/logrotate[\s\S]*/etc/logrotate.conf$
+  tags: ['configuration']
+
